@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import { BrowserRouter } from "react-router-dom";
+import { AuthProvider } from "./auth/AuthProvider.tsx";
 
 // Get the root element from the HTML document
 // We use the non-null assertion operator (!) to tell TypeScript that root will never be null
@@ -12,7 +13,9 @@ const root = document.getElementById("root")!;
 createRoot(root).render(
   <StrictMode>
     <BrowserRouter>
-      <App />
+      <AuthProvider defaultIsLogged={true}>
+        <App />
+      </AuthProvider>
     </BrowserRouter>
   </StrictMode>
 );
