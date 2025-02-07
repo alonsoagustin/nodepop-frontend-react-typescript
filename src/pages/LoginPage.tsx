@@ -1,8 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { login } from "../auth/service";
+import { useAuth } from "../auth/context";
 
 const LoginPage = () => {
+  // Hook to manage the authentication state
+  const { onLogin } = useAuth();
+
   // Hook to manage the inputs state
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -32,6 +36,8 @@ const LoginPage = () => {
       if (checked) {
         localStorage.setItem("accessToken", response);
       }
+
+      onLogin();
     } catch (error) {
       console.error("Error while trying to login", error);
     }
