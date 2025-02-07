@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { login } from "../auth/service";
 
 const LoginPage = () => {
   // Hook to manage the inputs state
@@ -19,6 +20,21 @@ const LoginPage = () => {
 
   const handleRememberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(e.target.checked);
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      const credentials = { email, password };
+      const response = await login(credentials);
+
+      if (checked) {
+        localStorage.setItem("accessToken", response);
+      }
+    } catch (error) {
+      console.error("Error while trying to login", error);
+    }
   };
 
   return (
