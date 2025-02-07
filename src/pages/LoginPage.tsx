@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { login } from "../auth/service";
 import { useAuth } from "../auth/context";
+import Button from "../components/Button";
 
 const LoginPage = () => {
   // Hook to manage the authentication state
@@ -97,13 +98,13 @@ const LoginPage = () => {
           </Link>
         </div>
         <div className="formActions">
-          <button
-            className="loginForm-submit"
-            type="submit"
+          <Button
+            className={"loginForm-submit btn"}
+            type={"submit"}
             disabled={isDisabled}
           >
             Login
-          </button>
+          </Button>
         </div>
       </form>
     </>
