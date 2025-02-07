@@ -1,4 +1,23 @@
+import { useState } from "react";
+
 const LoginPage = () => {
+  // Hook to manage the inputs state
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [checked, setChecked] = useState(false);
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+  };
+
+  const handleRememberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked(e.target.checked);
+  };
+
   return (
     <>
       <h2 className="loginPage-title">ACCESS YOUR ACCOUNT</h2>
