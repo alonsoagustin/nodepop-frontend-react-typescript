@@ -6,6 +6,7 @@ import NewAdvertPage from "./pages/NewAdvertPage";
 import AdvertPage from "./pages/AdvertPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import Layout from "./components/Layout";
+import AuthRequire from "./auth/AuthRequire";
 
 const App = () => {
   return (
@@ -21,10 +22,38 @@ const App = () => {
         <Route index element={<Navigate to="/adverts" />} />
         <Route path="login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
-        <Route path="/adverts" element={<AdvertsPage />} />
-        <Route path="/adverts/new" element={<NewAdvertPage />} />
-        <Route path="adverts/:advertId" element={<AdvertPage />} />
-        <Route path="/404" element={<NotFoundPage />} />
+        <Route
+          path="/adverts"
+          element={
+            <AuthRequire>
+              <AdvertsPage />
+            </AuthRequire>
+          }
+        />
+        <Route
+          path="/adverts/new"
+          element={
+            <AuthRequire>
+              <NewAdvertPage />
+            </AuthRequire>
+          }
+        />
+        <Route
+          path="adverts/:advertId"
+          element={
+            <AuthRequire>
+              <AdvertPage />
+            </AuthRequire>
+          }
+        />
+        <Route
+          path="/404"
+          element={
+            <AuthRequire>
+              <NotFoundPage />
+            </AuthRequire>
+          }
+        />
       </Route>
       <Route path="*" element={<Navigate to="/404" />} />
     </Routes>
