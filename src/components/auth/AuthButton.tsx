@@ -1,4 +1,4 @@
-import Button from "../components/Button";
+import Button from "../shared/Button";
 import { useAuth } from "./context";
 import { useNavigate } from "react-router-dom";
 

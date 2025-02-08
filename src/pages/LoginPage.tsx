@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
-import { login } from "../auth/service";
-import { useAuth } from "../auth/context";
-import Button from "../components/Button";
+import { login } from "../components/auth/service";
+import { useAuth } from "../components/auth/context";
+import Button from "../components/shared/Button";
 
 const LoginPage = () => {
   // Hook to manage the authentication state
