@@ -14,7 +14,10 @@ const AuthButton = () => {
     const currentTarget = event.currentTarget.textContent?.trim() as string;
 
     // Logout the user if the button clicked is "Logout"
-    if (currentTarget === "Logout") onLogout();
+    if (currentTarget === "Logout") {
+      onLogout();
+      localStorage.removeItem("accessToken");
+    }
 
     // Define the routes to navigate to
     const routes: Record<string, string> = {
