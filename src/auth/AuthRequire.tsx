@@ -8,7 +8,11 @@ interface Props {
 const AuthRequire = ({ children }: Props) => {
   const { isLogged } = useAuth();
 
-  return isLogged ? children : <Navigate to="/login" />;
+  return isLogged ? (
+    children
+  ) : (
+    <Navigate to="/login" state={{ from: location.pathname }} replace />
+  );
 };
 
 export default AuthRequire;

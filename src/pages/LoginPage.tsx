@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { login } from "../auth/service";
 import { useAuth } from "../auth/context";
 import Button from "../components/Button";
@@ -7,6 +7,12 @@ import Button from "../components/Button";
 const LoginPage = () => {
   // Hook to manage the authentication state
   const { onLogin } = useAuth();
+
+  // Hook to manage the navigation
+  const navigate = useNavigate();
+
+  // Hook to manage the location
+  const location = useLocation();
 
   // Hook to manage the inputs state
   const [email, setEmail] = useState("");
@@ -38,7 +44,11 @@ const LoginPage = () => {
         localStorage.setItem("accessToken", response);
       }
 
+      // Update the authentication state
       onLogin();
+
+      // Redirect to the previous page or to the home page
+      navigate(location.state?.from ?? "/", { replace: true });
     } catch (error) {
       console.error("Error while trying to login", error);
     }
