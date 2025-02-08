@@ -17,7 +17,7 @@ const LoginPage = () => {
   // Hook to manage the inputs state
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useState(true);
 
   const isDisabled = !email || !password;
 
