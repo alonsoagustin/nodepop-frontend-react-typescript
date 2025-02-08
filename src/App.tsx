@@ -5,7 +5,7 @@ import AdvertsPage from "./pages/AdvertsPage";
 import NewAdvertPage from "./pages/NewAdvertPage";
 import AdvertPage from "./pages/AdvertPage";
 import NotFoundPage from "./pages/NotFoundPage";
-import Layout from "./components/Layout";
+import Layout from "./components/layout/Layout";
 import AuthRequire from "./auth/AuthRequire";
 
 const App = () => {
