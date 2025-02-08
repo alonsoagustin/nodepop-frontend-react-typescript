@@ -6,7 +6,7 @@ import NewAdvertPage from "./pages/NewAdvertPage";
 import AdvertPage from "./pages/AdvertPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import Layout from "./components/layout/Layout";
-import AuthRequire from "./auth/AuthRequire";
+import AuthRequire from "./components/auth/AuthRequire";
 
 const App = () => {
   return (
