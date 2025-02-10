@@ -33,19 +33,19 @@ const AuthButton = () => {
 
   return isLogged ? (
     <>
-      <Button className={"btn"} onClick={handleOnClick}>
+      <Button className={"btn-outline-light"} onClick={handleOnClick}>
         New
       </Button>
-      <Button className={"btn"} onClick={handleOnClick}>
+      <Button className={"btn-outline-light"} onClick={handleOnClick}>
         Logout
       </Button>
     </>
   ) : (
     <>
-      <Button className={"btn"} onClick={handleOnClick}>
+      <Button className={"btn-outline-light"} onClick={handleOnClick}>
         Login
       </Button>
-      <Button className={"btn"} onClick={handleOnClick}>
+      <Button className={"btn-outline-light"} onClick={handleOnClick}>
         Signup
       </Button>
     </>
