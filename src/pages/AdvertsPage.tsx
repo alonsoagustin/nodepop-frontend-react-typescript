@@ -1,7 +1,24 @@
+import { useState } from "react";
+import AdvertItem from "./Advert";
+
 const AdvertsPage = () => {
   // The adverts will be updated when the context is updated
   // This way, we avoid making a request to the server every time we access the page
   const { adverts } = useAdverts();
+
+  // Hook to manage the filtered adverts
+  const [filteredAdverts, setFilteredAdverts] = useState(adverts);
+
+  // Hook to manage the search input
+  const [search, setSearch] = useState("");
+
+  // Hook to manage the checkbox input
+  const [checkboxes, setChecked] = useState<Record<string, boolean>>({
+    lifestyle: true,
+    mobile: true,
+    motor: true,
+    work: true,
+  });
 
   return (
     <>
