@@ -1,8 +1,10 @@
+import "bootstrap/dist/css/bootstrap.min.css";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./components/auth/AuthProvider";
+import { AdvertsProvider } from "./pages/AdvertsProvider";
 
 // Get the root element from the HTML document
 // We use the non-null assertion operator (!) to tell TypeScript that root will never be null
@@ -16,7 +18,9 @@ createRoot(root).render(
   <StrictMode>
     <BrowserRouter>
       <AuthProvider defaultIsLogged={!!accessToken}>
-        <App />
+        <AdvertsProvider>
+          <App />
+        </AdvertsProvider>
       </AuthProvider>
     </BrowserRouter>
   </StrictMode>
