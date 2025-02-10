@@ -1,4 +1,8 @@
 const AdvertsPage = () => {
+  // The adverts will be updated when the context is updated
+  // This way, we avoid making a request to the server every time we access the page
+  const { adverts } = useAdverts();
+
   return (
     <>
       <h2 className="mt-5 text-center">{"List of adverts"}</h2>
