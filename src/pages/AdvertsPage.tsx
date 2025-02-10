@@ -1,5 +1,7 @@
 import { useState } from "react";
 import AdvertItem from "./Advert";
+import { useAdverts } from "./context";
+import type { Advert } from "./types";
 
 const AdvertsPage = () => {
   // The adverts will be updated when the context is updated
@@ -19,6 +21,15 @@ const AdvertsPage = () => {
     motor: true,
     work: true,
   });
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    setSearch(e.target.value);
+    const filtered = adverts.filter((advert: Advert) => {
+      return advert.name.toLowerCase().includes(e.target.value.toLowerCase());
+    });
+    setFilteredAdverts(filtered);
+  };
 
   return (
     <>
