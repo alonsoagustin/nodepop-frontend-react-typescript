@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AdvertItem from "./Advert";
 import { useAdverts } from "./context";
 import type { Advert } from "./types";
@@ -30,6 +30,26 @@ const AdvertsPage = () => {
     });
     setFilteredAdverts(filtered);
   };
+
+  const handleChekboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target;
+    setChecked((prevState) => {
+      return {
+        ...prevState,
+        [name]: checked,
+      };
+    });
+  };
+
+  useEffect(() => {
+    const checkboxesKeys = Object.keys(checkboxes);
+    const filtered = adverts.filter((advert: Advert) => {
+      return checkboxesKeys.some((key) => {
+        return checkboxes[key] === true && advert.tags.includes(key);
+      });
+    });
+    setFilteredAdverts(filtered);
+  }, [checkboxes, adverts]);
 
   return (
     <>
