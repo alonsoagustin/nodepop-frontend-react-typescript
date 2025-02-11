@@ -1,4 +1,4 @@
-import { createContext, use } from "react";
+import { createContext, useContext } from "react";
 import type { Advert } from "./types";
 
 interface AdvertsContextValue {
@@ -8,12 +8,12 @@ interface AdvertsContextValue {
 }
 
 export const AdvertsContext = createContext<AdvertsContextValue>({
-  adverts: [] as Advert[],
+  adverts: [],
   handleDeleteAdvert: () => {},
   handleCreateAdvert: () => {},
 });
 
 export const useAdverts = () => {
-  const advertsValue = use(AdvertsContext);
+  const advertsValue = useContext(AdvertsContext);
   return advertsValue;
 };
