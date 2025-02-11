@@ -4,17 +4,16 @@ import { useAdverts } from "./context";
 import type { Advert } from "./types";
 
 const AdvertsPage = () => {
-  // The adverts will be updated when the context is updated
-  // This way, we avoid making a request to the server every time we access the page
+  // Hook to get the adverts from the context
   const { adverts } = useAdverts();
 
   // Hook to manage the filtered adverts
-  const [filteredAdverts, setFilteredAdverts] = useState(adverts);
+  const [filteredAdverts, setFilteredAdverts] = useState<Advert[]>(adverts);
 
-  // Hook to manage the search input
+  // Hook to manage the search term
   const [search, setSearch] = useState("");
 
-  // Hook to manage the checkbox input
+  // Hook to manage the selected categories
   const [checkboxes, setChecked] = useState<Record<string, boolean>>({
     lifestyle: true,
     mobile: true,
@@ -22,18 +21,20 @@ const AdvertsPage = () => {
     work: true,
   });
 
+  // Function to handle the search input change
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
+    // This function will be executed when the input value changes
+    // It will update the search state with the new value
+    // The search state will be used to filter the adverts
     setSearch(e.target.value);
-    const filtered = adverts.filter((advert: Advert) => {
-      return advert.name.toLowerCase().includes(e.target.value.toLowerCase());
-    });
-    setFilteredAdverts(filtered);
   };
 
-  const handleChekboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Function to handle the checkbox change
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Get the name and checked properties from the checkbox
     const { name, checked } = e.target;
     setChecked((prevState) => {
+      // Copy the previous state modifying the checkbox that has changed
       return {
         ...prevState,
         [name]: checked,
@@ -41,27 +42,44 @@ const AdvertsPage = () => {
     });
   };
 
+  // Hook to filter the adverts based on the search term and the selected categories
+  // This hook will be executed when the search term, the checkboxes or the adverts change
   useEffect(() => {
+    // Start by setting the filtered adverts to all the adverts
+    setFilteredAdverts(adverts);
+
+    // Get the keys of the checkboxes object
     const checkboxesKeys = Object.keys(checkboxes);
+
+    // Filter the adverts based on the search term and the selected categories
     const filtered = adverts.filter((advert: Advert) => {
-      return checkboxesKeys.some((key) => {
-        return checkboxes[key] === true && advert.tags.includes(key);
-      });
+      // Check if the advert name includes the search term
+      const matchesSearch = advert.name
+        .toLowerCase()
+        .includes(search.toLowerCase());
+
+      // Check if the advert tags include the selected categories
+      const matchesCategory = checkboxesKeys.some(
+        (key) => checkboxes[key] && advert.tags.includes(key)
+      );
+      return matchesSearch && matchesCategory;
     });
+
+    // Update the filtered adverts state
     setFilteredAdverts(filtered);
-  }, [checkboxes, adverts]);
+  }, [search, checkboxes, adverts]);
 
   return (
     <>
       <h2 className="mt-5 text-center">{"List of adverts"}</h2>
       <div className="d-flex justify-content-center align-items-center gap-3 mt-4 mb-4">
-        <form>
+        <form onSubmit={(e) => e.preventDefault()}>
           <div className="formField d-flex justify-content-center align-items-center">
             <input
               className="formField-input form-control fs-6 "
               type="search"
               placeholder="Search advert by name"
-              value={search}
+              value={search} // The input value is controlled by the search state
               onChange={handleSearchChange}
             />
           </div>
@@ -83,7 +101,7 @@ const AdvertsPage = () => {
                   id="lifestyle"
                   value="lifestyle"
                   checked={checkboxes.lifestyle}
-                  onChange={handleChekboxChange}
+                  onChange={handleCheckboxChange}
                 />
                 <label className="form-check-label" htmlFor="lifestyle">
                   Lifestyle
@@ -97,7 +115,7 @@ const AdvertsPage = () => {
                   id="mobile"
                   value="mobile"
                   checked={checkboxes.mobile}
-                  onChange={handleChekboxChange}
+                  onChange={handleCheckboxChange}
                 />
                 <label className="form-check-label" htmlFor="mobile">
                   Mobile
@@ -111,7 +129,7 @@ const AdvertsPage = () => {
                   id="motor"
                   value="motor"
                   checked={checkboxes.motor}
-                  onChange={handleChekboxChange}
+                  onChange={handleCheckboxChange}
                 />
                 <label className="form-check-label" htmlFor="motor">
                   Motor
@@ -125,7 +143,7 @@ const AdvertsPage = () => {
                   id="work"
                   value="work"
                   checked={checkboxes.work}
-                  onChange={handleChekboxChange}
+                  onChange={handleCheckboxChange}
                 />
                 <label className="form-check-label" htmlFor="work">
                   Work
@@ -137,15 +155,20 @@ const AdvertsPage = () => {
       </div>
       <div className="container">
         <div className="row" style={{ gap: "1rem" }}>
-          {filteredAdverts.map((advert: Advert) => (
-            <div
-              key={advert.id}
-              className="col-12 col-md-6 col-lg-4"
-              style={{ display: "flex", justifyContent: "center" }}
-            >
-              <AdvertItem advert={advert} />
-            </div>
-          ))}
+          {Array.isArray(filteredAdverts) ? (
+            filteredAdverts.map((advert: Advert) => (
+              <div
+                key={advert.id}
+                className="col-12 col-md-6 col-lg-4"
+                style={{ display: "flex", justifyContent: "center" }}
+              >
+                <AdvertItem advert={advert} />
+              </div>
+            ))
+          ) : (
+            // TODO: Provide a better error message or link to navigate to new adverts
+            <h2 className="text-center">No adverts found</h2>
+          )}
         </div>
       </div>
     </>
