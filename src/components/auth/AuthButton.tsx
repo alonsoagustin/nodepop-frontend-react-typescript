@@ -22,7 +22,7 @@ const AuthButton = () => {
     // Define the routes to navigate to
     const routes: Record<string, string> = {
       Login: "/login",
-      Logout: "/login",
+      Logout: "/adverts",
       Signup: "/signup",
       New: "/adverts/new",
     };
