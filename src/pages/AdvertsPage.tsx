@@ -71,8 +71,8 @@ const AdvertsPage = () => {
 
   return (
     <>
-      <h2 className="mt-5 text-center">{"List of adverts"}</h2>
-      <div className="d-flex justify-content-center align-items-center gap-3 mt-4 mb-4">
+      <h2 className="text-center mb-4">{"List of adverts"}</h2>
+      <div className="d-flex justify-content-center align-items-center gap-3 mb-4">
         <form onSubmit={(e) => e.preventDefault()}>
           <div className="formField d-flex justify-content-center align-items-center">
             <input
