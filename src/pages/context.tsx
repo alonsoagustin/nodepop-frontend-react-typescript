@@ -4,7 +4,7 @@ import type { Advert } from "./types";
 interface AdvertsContextValue {
   adverts: Advert[];
   handleDeleteAdvert: () => void;
-  handleCreateAdvert: () => void;
+  handleCreateAdvert: (advert: FormData) => void;
 }
 
 export const AdvertsContext = createContext<AdvertsContextValue>({
