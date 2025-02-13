@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAllAdverts } from "./service";
+import { createAdvert, getAllAdverts } from "./service";
 import { AdvertsContext } from "./context";
 import { useAuth } from "../components/auth/context";
 import type { Advert } from "./types";
@@ -23,6 +23,9 @@ export const AdvertsProvider = ({
   // Hook to manage the adverts state
   const [adverts, setAdverts] = useState<Advert[]>([]);
 
+  // Hook to manage the reload state
+  const [reload, setReload] = useState(false);
+
   // Hook to get all the adverts when the user is logged
   useEffect(() => {
     if (!isLogged) return;
@@ -37,14 +40,25 @@ export const AdvertsProvider = ({
       }
     };
     loadAdverts();
-  }, [isLogged]);
+  }, [isLogged, reload]);
 
   const handleDeleteAdvert = async () => {
     console.log("deleteAdvert");
   };
 
-  const handleCreateAdvert = async () => {
-    console.log("createAdvert");
+  // Function to create an advert
+  const handleCreateAdvert = async (advert: FormData) => {
+    try {
+      const response = await createAdvert(advert);
+      if (response.statusCode === 401) throw new Error(response.message);
+      // Copy the current adverts and add the new one
+      setAdverts((adverts) => [...adverts, response]);
+
+      // Reload the adverts using calback function because we need to wait for the state to be updated
+      setReload((reload) => !reload);
+    } catch (error) {
+      console.error("Error while trying to create the advert", error);
+    }
   };
 
   const advertsValue = {
