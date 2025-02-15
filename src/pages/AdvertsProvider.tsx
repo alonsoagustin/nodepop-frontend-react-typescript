@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { createAdvert, getAllAdverts } from "./service";
+import { useNavigate } from "react-router-dom";
 import { AdvertsContext } from "./context";
 import { useAuth } from "../components/auth/context";
-import type { Advert } from "./types";
+import { createAdvert, deleteAdvertById, getAllAdverts } from "./service";
+import type { Advert, ErrorAdvert } from "./types";
 
 // instead of passing the children prop as a parameter, we can destructure it directly in the function signature
 // interface Props {
@@ -20,11 +21,15 @@ export const AdvertsProvider = ({
   // Hook to get the user authentication status
   const { isLogged } = useAuth();
 
+  const navigate = useNavigate();
+
   // Hook to manage the adverts state
   const [adverts, setAdverts] = useState<Advert[]>([]);
 
   // Hook to manage the reload state
   const [reload, setReload] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   // Hook to get all the adverts when the user is logged
   useEffect(() => {
@@ -32,32 +37,52 @@ export const AdvertsProvider = ({
 
     // Get all the adverts if the user is logged
     const loadAdverts = async () => {
+      setIsLoading(true);
       try {
         const response = await getAllAdverts();
+        if ("statusCode" in response) return response;
         setAdverts(response);
+        return response;
       } catch (error) {
         console.error("Error while trying to get the adverts", error);
+      } finally {
+        setIsLoading(false);
       }
     };
     loadAdverts();
   }, [isLogged, reload]);
 
-  const handleDeleteAdvert = async () => {
-    console.log("deleteAdvert");
+  const handleDeleteAdvert = async (
+    advertId: string
+  ): Promise<Advert | ErrorAdvert | undefined> => {
+    setIsLoading(true);
+    try {
+      const response = await deleteAdvertById(advertId);
+      if ("statusCode" in response) return response;
+      setReload((reload) => !reload);
+      navigate("/");
+      return response;
+    } catch (error) {
+      console.error("Error while trying to delete the advert", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Function to create an advert
-  const handleCreateAdvert = async (advert: FormData) => {
+  const handleCreateAdvert = async (
+    advert: FormData
+  ): Promise<Advert | ErrorAdvert | undefined> => {
+    setIsLoading(true);
     try {
       const response = await createAdvert(advert);
-      if (response.statusCode === 401) throw new Error(response.message);
-      // Copy the current adverts and add the new one
-      setAdverts((adverts) => [...adverts, response]);
-
-      // Reload the adverts using calback function because we need to wait for the state to be updated
+      if ("statusCode" in response) throw response;
       setReload((reload) => !reload);
+      return response;
     } catch (error) {
       console.error("Error while trying to create the advert", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -65,6 +90,7 @@ export const AdvertsProvider = ({
     adverts,
     handleDeleteAdvert,
     handleCreateAdvert,
+    isLoading,
   };
 
   return (
