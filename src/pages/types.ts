@@ -6,3 +6,9 @@ export interface Advert {
   tags: string[];
   photo: string;
 }
+
+export interface ErrorAdvert {
+  statusCode: number;
+  message: string;
+  error: string;
+}
