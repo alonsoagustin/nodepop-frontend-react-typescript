@@ -1,16 +1,26 @@
 import { createContext, useContext } from "react";
-import type { Advert } from "./types";
+import type { Advert, ErrorAdvert } from "./types";
 
 interface AdvertsContextValue {
   adverts: Advert[];
-  handleDeleteAdvert: () => void;
-  handleCreateAdvert: (advert: FormData) => void;
+  handleDeleteAdvert: (
+    advertId: string
+  ) => Promise<Advert | ErrorAdvert | undefined>;
+  handleCreateAdvert: (
+    advert: FormData
+  ) => Promise<Advert | ErrorAdvert | undefined>;
+  isLoading: boolean;
 }
 
 export const AdvertsContext = createContext<AdvertsContextValue>({
   adverts: [],
-  handleDeleteAdvert: () => {},
-  handleCreateAdvert: () => {},
+  handleDeleteAdvert: () => {
+    throw new Error("handleDeleteAdvert not implemented");
+  },
+  handleCreateAdvert: () => {
+    throw new Error("handleCreateAdvert not implemented");
+  },
+  isLoading: false,
 });
 
 export const useAdverts = () => {
