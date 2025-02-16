@@ -3,6 +3,7 @@ import { useNavigate, useLocation, Link } from "react-router-dom";
 import { login } from "../components/auth/service";
 import { useAuth } from "../components/auth/context";
 import Button from "../components/shared/Button";
+import FormField from "../components/shared/FormField";
 
 const LoginPage = () => {
   // Hook to manage the authentication state
@@ -63,50 +64,53 @@ const LoginPage = () => {
             className="col-12 col-md-6 col-lg-4 p-4 border rounded"
             onSubmit={handleSubmit}
           >
-            <div className="mb-3">
-              <label className="form-label" htmlFor="email">
-                <span>Email address </span>
-              </label>
-              <input
-                className="form-control"
-                type="email"
-                name="email"
-                id="email"
-                placeholder="Insert your email here"
-                autoComplete="on"
-                value={email}
-                onChange={handleEmailChange}
-                required
-              />
-            </div>
-            <div className="mb-3">
-              <label className="form-label" htmlFor="password">
-                <span>Password</span>
-              </label>
-              <input
-                className="form-control"
-                type="password"
-                name="password"
-                id="password"
-                placeholder="Insert your password here"
-                value={password}
-                onChange={handlePasswordChange}
-                required
-              />
-            </div>
-            <div className="form-check mb-0">
-              <input
-                className="form-check-input "
-                type="checkbox"
-                name="remember"
-                id="remember"
-                checked={checked}
-                onChange={handleRememberChange}
-              />
-              <label className="form-label" htmlFor="remember">
-                <span>Remember me</span>
-              </label>
-            </div>
+            <FormField
+              className={{
+                container: "mb-3",
+                labelClass: "form-label",
+                input: "form-control",
+              }}
+              label="Email adress"
+              type="email"
+              name="email"
+              id="email"
+              placeholder="Insert your email here"
+              value={email}
+              onChange={handleEmailChange}
+              required
+            />
+
+            <FormField
+              className={{
+                container: "mb-3",
+                labelClass: "form-label",
+                input: "form-control",
+              }}
+              label="Password"
+              type="password"
+              name="password"
+              id="password"
+              placeholder="Insert your password here"
+              value={password}
+              onChange={handlePasswordChange}
+              required
+            />
+
+            <FormField
+              inputBeforeLable
+              className={{
+                container: "form-check mb-0",
+                labelClass: "form-label",
+                input: "form-check-input",
+              }}
+              label="Remember me"
+              type="checkbox"
+              name="remember"
+              id="remember"
+              checked={checked}
+              onChange={handleRememberChange}
+            />
+
             <div className="mb-3">
               <Link to={"/signup"}>
                 <span className="btn btn-link">
@@ -114,6 +118,7 @@ const LoginPage = () => {
                 </span>
               </Link>
             </div>
+
             <div className="d-flex justify-content-end ">
               <Button
                 className={"btn btn-primary"}
