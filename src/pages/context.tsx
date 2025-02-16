@@ -20,7 +20,7 @@ export const AdvertsContext = createContext<AdvertsContextValue>({
   handleCreateAdvert: () => {
     throw new Error("handleCreateAdvert not implemented");
   },
-  isLoading: false,
+  isLoading: true,
 });
 
 export const useAdverts = () => {

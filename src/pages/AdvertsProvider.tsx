@@ -29,7 +29,7 @@ export const AdvertsProvider = ({
   // Hook to manage the reload state
   const [reload, setReload] = useState(false);
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Hook to get all the adverts when the user is logged
   useEffect(() => {
@@ -37,7 +37,6 @@ export const AdvertsProvider = ({
 
     // Get all the adverts if the user is logged
     const loadAdverts = async () => {
-      setIsLoading(true);
       try {
         const response = await getAllAdverts();
         if ("statusCode" in response) return response;
@@ -55,7 +54,6 @@ export const AdvertsProvider = ({
   const handleDeleteAdvert = async (
     advertId: string
   ): Promise<Advert | ErrorAdvert | undefined> => {
-    setIsLoading(true);
     try {
       const response = await deleteAdvertById(advertId);
       if ("statusCode" in response) return response;
@@ -73,7 +71,6 @@ export const AdvertsProvider = ({
   const handleCreateAdvert = async (
     advert: FormData
   ): Promise<Advert | ErrorAdvert | undefined> => {
-    setIsLoading(true);
     try {
       const response = await createAdvert(advert);
       if ("statusCode" in response) throw response;
