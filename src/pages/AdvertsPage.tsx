@@ -161,7 +161,7 @@ const AdvertsPage = () => {
         {isLoading ? (
           <Spinner isLoading={isLoading} />
         ) : (
-          <div className="row justify-content-between ps-4 pe-4 gap-5">
+          <div className="row gap-4 justify-content-center">
             {filteredAdverts.length > 0 ? (
               filteredAdverts.map((advert: Advert) => (
                 <div
