@@ -72,7 +72,6 @@ const LoginPage = () => {
               }}
               label="Email adress"
               type="email"
-              name="email"
               id="email"
               placeholder="Insert your email here"
               value={email}
@@ -88,7 +87,6 @@ const LoginPage = () => {
               }}
               label="Password"
               type="password"
-              name="password"
               id="password"
               placeholder="Insert your password here"
               value={password}
@@ -105,7 +103,6 @@ const LoginPage = () => {
               }}
               label="Remember me"
               type="checkbox"
-              name="remember"
               id="remember"
               checked={checked}
               onChange={handleRememberChange}

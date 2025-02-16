@@ -100,9 +100,7 @@ const AdvertsPage = () => {
                 <FormField
                   inputBeforeLable
                   type="checkbox"
-                  name="lifestyle"
                   id="lifestyle"
-                  value="lifestyle"
                   checked={checkboxes.lifestyle}
                   onChange={handleCheckboxChange}
                   label="Lifestyle"
@@ -117,9 +115,7 @@ const AdvertsPage = () => {
                 <FormField
                   inputBeforeLable
                   type="checkbox"
-                  name="mobile"
                   id="mobile"
-                  value="mobile"
                   checked={checkboxes.mobile}
                   onChange={handleCheckboxChange}
                   label="Mobile"
@@ -134,9 +130,7 @@ const AdvertsPage = () => {
                 <FormField
                   inputBeforeLable
                   type="checkbox"
-                  name="motor"
                   id="motor"
-                  value="motor"
                   checked={checkboxes.motor}
                   onChange={handleCheckboxChange}
                   label="Motor"
@@ -151,9 +145,7 @@ const AdvertsPage = () => {
                 <FormField
                   inputBeforeLable
                   type="checkbox"
-                  name="work"
                   id="work"
-                  value="work"
                   checked={checkboxes.work}
                   onChange={handleCheckboxChange}
                   label="Work"
