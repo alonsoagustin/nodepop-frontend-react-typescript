@@ -14,7 +14,7 @@ interface Props {
 const Modal = ({ title, showModal, onClose, buttons }: Props) => {
   return (
     showModal && (
-      <div className="position-fixed top-0 start-0 w-100 vh-100">
+      <div className="position-fixed top-0 start-0 w-100 vh-100 z-3">
         <div
           onClick={onClose}
           className="position-fixed top-0 start-0 w-100 vh-100 bg-dark bg-opacity-50"
