@@ -1,40 +1,58 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAdverts } from "../pages/context";
 import Button from "../components/shared/Button";
 import Modal from "../components/shared/Modal";
+import Spinner from "../components/shared/Spinner";
+import type { Advert } from "./types";
 
 const AdvertPage = () => {
   // Get the advert id from the URL
   const { advertId = "" } = useParams();
 
   // Get the advert data from the context
-  const { adverts, handleDeleteAdvert } = useAdverts();
+  const { adverts, isLoading, handleDeleteAdvert } = useAdverts();
 
   const navigate = useNavigate();
 
   // State to control the modal
   const [showModal, setShowModal] = useState(false);
+  const [showNotFoundModal, setShowNotFoundModal] = useState(false);
+  const [advert, setAdvert] = useState<Advert | undefined>();
 
-  //Find the advert with the advertId
-  const advert = adverts.find((advert) => advert.id === advertId);
+  useEffect(() => {
+    const foundAdvert = adverts.find((advert) => advert.id === advertId);
+    setAdvert(foundAdvert);
 
-  if (advert === undefined)
+    if (!foundAdvert) {
+      setShowNotFoundModal(true);
+    }
+  }, [adverts, advertId]);
+
+  if (isLoading) {
     return (
-      <>
-        <h2>Advert not found</h2>
-        <p>The advert with id {advertId} was not found</p>
-      </>
+      <div className="position-fixed top-50 left-50 w-100">
+        <Spinner isLoading={isLoading} />;
+      </div>
     );
+  }
 
   // Function to open the modal
-  const displayModal = () => {
+  const handleOpenModal = () => {
     setShowModal(true);
   };
 
-  // Function to close the modal
-  const handleCancelDelete = () => {
+  const handleCloseModal = () => {
     setShowModal(false);
+  };
+
+  const handleCloseNotFoundModal = () => {
+    setShowNotFoundModal(false);
+    navigate("/");
+  };
+
+  const handleCreateAdvert = () => {
+    navigate("/adverts/new");
   };
 
   const handleConfirmDelete = async () => {
@@ -52,12 +70,12 @@ const AdvertPage = () => {
       <Modal
         title="Are you sure you want to delete this advert?"
         showModal={showModal}
-        onClose={handleCancelDelete}
+        onClose={handleCloseModal}
         buttons={[
           {
             textContent: "Cancel",
             className: "btn-primary",
-            onClick: handleCancelDelete,
+            onClick: handleCloseModal,
           },
           {
             textContent: "Delete",
@@ -67,34 +85,58 @@ const AdvertPage = () => {
         ]}
       />
 
-      <h2 className="text-center mb-4">Advert Detail</h2>
-      <div className="container p-4">
-        <div className="row ">
-          <div className="col-12 col-md-4 ">
-            <img
-              src={advert.photo}
-              alt={advert.name}
-              className="img-fluid rounded mx-auto d-block"
-            />
-          </div>
-          <div className="col-12 col-md-8 border rounded d-flex flex-column justify-content-between align-items-center">
-            <h3 className="text-center">{advert.name}</h3>
-            <p className="d-flex align-items-center gap-2">
-              <strong>Price:</strong>
-              <span>€ {advert.price}</span>
-            </p>
-            <p className="d-flex align-items-center gap-2">
-              <strong className="">Category:</strong>
-              <span className="btn btn-link">{advert.tags}</span>
-            </p>
-            <div>
-              <Button className="btn-danger" onClick={displayModal}>
-                Delete
-              </Button>
+      {!advert ? (
+        <>
+          <Modal
+            title="Advert not found"
+            showModal={showNotFoundModal}
+            onClose={handleCloseNotFoundModal}
+            buttons={[
+              {
+                textContent: "Cancel",
+                className: "btn-primary",
+                onClick: handleCloseNotFoundModal,
+              },
+              {
+                textContent: "Create",
+                className: "btn-success",
+                onClick: handleCreateAdvert,
+              },
+            ]}
+          />
+        </>
+      ) : (
+        <>
+          <h2 className="text-center mb-4">Advert Detail</h2>
+          <div className="container p-4">
+            <div className="row ">
+              <div className="col-12 col-md-4 ">
+                <img
+                  src={advert.photo}
+                  alt={advert.name}
+                  className="img-fluid rounded mx-auto d-block"
+                />
+              </div>
+              <div className="col-12 col-md-8 border rounded d-flex flex-column justify-content-between align-items-center">
+                <h3 className="text-center">{advert.name}</h3>
+                <p className="d-flex align-items-center gap-2">
+                  <strong>Price:</strong>
+                  <span>€ {advert.price}</span>
+                </p>
+                <p className="d-flex align-items-center gap-2">
+                  <strong className="">Category:</strong>
+                  <span className="btn btn-link">{advert.tags}</span>
+                </p>
+                <div>
+                  <Button className="btn-danger" onClick={handleOpenModal}>
+                    Delete
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+        </>
+      )}
     </>
   );
 };
