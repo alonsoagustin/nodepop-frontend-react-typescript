@@ -1,5 +1,6 @@
 import { useState } from "react";
 import AdvertItem from "./Advert";
+import FormField from "../components/shared/FormField";
 import Spinner from "../components/shared/Spinner";
 import Modal from "../components/shared/Modal";
 import { useAdverts } from "./context";
@@ -74,17 +75,19 @@ const AdvertsPage = () => {
             style={{ height: "2.75rem" }}
             onSubmit={(e) => e.preventDefault()}
           >
-            <div className="formField d-flex justify-content-center align-items-center p-0 m-0">
-              <input
-                className="formField-input form-control fs-6 h-100"
-                type="search"
-                name="search"
-                id="search"
-                placeholder="Search advert by name"
-                value={search} // The input value is controlled by the search state
-                onChange={handleSearchChange}
-              />
-            </div>
+            <FormField
+              type="search"
+              name="search"
+              id="search"
+              value={search}
+              placeholder="Search advert by name"
+              onChange={handleSearchChange}
+              className={{
+                container:
+                  "formField d-flex justify-content-center align-items-center p-0 m-0",
+                input: "formField-input form-control fs-6 h-100",
+              }}
+            />
           </form>
 
           {/* input checkbox */}
@@ -94,62 +97,73 @@ const AdvertsPage = () => {
           >
             <fieldset className="border rounded p-1">
               <div className="row g-2">
-                <div className="form-check col-6 col-md-3 d-flex justify-content-center align-items-center">
-                  <input
-                    className="form-check-input me-2"
-                    type="checkbox"
-                    name="lifestyle"
-                    id="lifestyle"
-                    value="lifestyle"
-                    checked={checkboxes.lifestyle}
-                    onChange={handleCheckboxChange}
-                  />
-                  <label className="form-check-label" htmlFor="lifestyle">
-                    Lifestyle
-                  </label>
-                </div>
-                <div className="form-check col-6 col-md-3 d-flex justify-content-center align-items-center">
-                  <input
-                    className="form-check-input me-2"
-                    type="checkbox"
-                    name="mobile"
-                    id="mobile"
-                    value="mobile"
-                    checked={checkboxes.mobile}
-                    onChange={handleCheckboxChange}
-                  />
-                  <label className="form-check-label" htmlFor="mobile">
-                    Mobile
-                  </label>
-                </div>
-                <div className="form-check col-6 col-md-3 d-flex justify-content-center align-items-center">
-                  <input
-                    className="form-check-input me-2"
-                    type="checkbox"
-                    name="motor"
-                    id="motor"
-                    value="motor"
-                    checked={checkboxes.motor}
-                    onChange={handleCheckboxChange}
-                  />
-                  <label className="form-check-label" htmlFor="motor">
-                    Motor
-                  </label>
-                </div>
-                <div className="form-check col-6 col-md-3 d-flex justify-content-center align-items-center">
-                  <input
-                    className="form-check-input me-2"
-                    type="checkbox"
-                    name="work"
-                    id="work"
-                    value="work"
-                    checked={checkboxes.work}
-                    onChange={handleCheckboxChange}
-                  />
-                  <label className="form-check-label" htmlFor="work">
-                    Work
-                  </label>
-                </div>
+                <FormField
+                  inputBeforeLable
+                  type="checkbox"
+                  name="lifestyle"
+                  id="lifestyle"
+                  value="lifestyle"
+                  checked={checkboxes.lifestyle}
+                  onChange={handleCheckboxChange}
+                  label="Lifestyle"
+                  className={{
+                    container:
+                      "form-check col-6 col-md-3 d-flex justify-content-center align-items-center",
+                    labelClass: "form-check-label",
+                    input: "form-check-input me-2",
+                  }}
+                />
+
+                <FormField
+                  inputBeforeLable
+                  type="checkbox"
+                  name="mobile"
+                  id="mobile"
+                  value="mobile"
+                  checked={checkboxes.mobile}
+                  onChange={handleCheckboxChange}
+                  label="Mobile"
+                  className={{
+                    container:
+                      "form-check col-6 col-md-3 d-flex justify-content-center align-items-center",
+                    labelClass: "form-check-label",
+                    input: "form-check-input me-2",
+                  }}
+                />
+
+                <FormField
+                  inputBeforeLable
+                  type="checkbox"
+                  name="motor"
+                  id="motor"
+                  value="motor"
+                  checked={checkboxes.motor}
+                  onChange={handleCheckboxChange}
+                  label="Motor"
+                  className={{
+                    container:
+                      "form-check col-6 col-md-3 d-flex justify-content-center align-items-center",
+                    labelClass: "form-check-label",
+                    input: "form-check-input me-2",
+                  }}
+                />
+
+                <FormField
+                  inputBeforeLable
+                  type="checkbox"
+                  name="work"
+                  id="work"
+                  value="work"
+                  checked={checkboxes.work}
+                  onChange={handleCheckboxChange}
+                  label="Work"
+                  className={{
+                    container:
+                      "form-check col-6 col-md-3 d-flex justify-content-center align-items-center",
+                    labelClass: "form-check-label",
+                    input: "form-check-input me-2",
+                  }}
+                />
               </div>
             </fieldset>
           </form>
