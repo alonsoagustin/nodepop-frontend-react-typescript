@@ -20,15 +20,15 @@ const FormField = ({
     <div className={`${container}`}>
       {inputBeforeLable ? (
         <>
-          <input className={input} id={id} {...props} />
+          <input className={input} id={id} name={id} value={id} {...props} />
           <label className={labelClass} htmlFor={id}>
-            {label}
+            <span>{label}</span>
           </label>
         </>
       ) : (
         <>
           <label className={labelClass} htmlFor={id}>
-            {label}
+            <span>{label}</span>{" "}
           </label>
           <input className={input} id={id} {...props} />
         </>
