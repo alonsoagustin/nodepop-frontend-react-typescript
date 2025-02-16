@@ -1,14 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import AdvertItem from "./Advert";
+import Spinner from "../components/shared/Spinner";
+import Modal from "../components/shared/Modal";
 import { useAdverts } from "./context";
 import type { Advert } from "./types";
 
 const AdvertsPage = () => {
   // Hook to get the adverts from the context
-  const { adverts } = useAdverts();
+  const { adverts, isLoading } = useAdverts();
+  console.log("isLoading:", isLoading);
 
-  // Hook to manage the filtered adverts
-  const [filteredAdverts, setFilteredAdverts] = useState<Advert[]>(adverts);
+  //
+  const [showModal, setShowModal] = useState(true);
 
   // Hook to manage the search term
   const [search, setSearch] = useState("");
@@ -31,145 +34,159 @@ const AdvertsPage = () => {
 
   // Function to handle the checkbox change
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Get the name and checked properties from the checkbox
-    const { name, checked } = e.target;
-    setChecked((prevState) => {
-      // Copy the previous state modifying the checkbox that has changed
-      return {
-        ...prevState,
-        [name]: checked,
-      };
-    });
+    // Copy the previous state modifying the checkbox that has changed
+    setChecked({ ...checkboxes, [e.target.name]: e.target.checked });
   };
 
-  // Hook to filter the adverts based on the search term and the selected categories
-  // This hook will be executed when the search term, the checkboxes or the adverts change
-  useEffect(() => {
-    // Start by setting the filtered adverts to all the adverts
-    setFilteredAdverts(adverts);
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
+  // A useEffect is not needed here because the adverts data is already being
+  // fetched and managed by the context (useAdverts). The component re-renders
+  // automatically when the context updates, ensuring that the latest data
+  // is displayed without requiring an additional effect to fetch adverts again.
+  const filteredAdverts = adverts.filter((advert: Advert) => {
+    // Check if the advert name includes the search term
+    const matchesSearch = advert.name
+      .toLowerCase()
+      .includes(search.toLowerCase());
 
     // Get the keys of the checkboxes object
     const checkboxesKeys = Object.keys(checkboxes);
 
-    // Filter the adverts based on the search term and the selected categories
-    const filtered = adverts.filter((advert: Advert) => {
-      // Check if the advert name includes the search term
-      const matchesSearch = advert.name
-        .toLowerCase()
-        .includes(search.toLowerCase());
-
-      // Check if the advert tags include the selected categories
-      const matchesCategory = checkboxesKeys.some(
-        (key) => checkboxes[key] && advert.tags.includes(key)
-      );
-      return matchesSearch && matchesCategory;
-    });
-
-    // Update the filtered adverts state
-    setFilteredAdverts(filtered);
-  }, [search, checkboxes, adverts]);
+    // Check if the advert tags include the selected categories
+    const matchesCategory = checkboxesKeys.some(
+      (key) => checkboxes[key] && advert.tags.includes(key)
+    );
+    return matchesSearch && matchesCategory;
+  });
 
   return (
     <>
-      <h2 className="text-center mb-4">{"List of adverts"}</h2>
-      <div className="d-flex justify-content-center align-items-center gap-3 mb-4">
-        <form onSubmit={(e) => e.preventDefault()}>
-          <div className="formField d-flex justify-content-center align-items-center">
-            <input
-              className="formField-input form-control fs-6 "
-              type="search"
-              placeholder="Search advert by name"
-              value={search} // The input value is controlled by the search state
-              onChange={handleSearchChange}
-            />
-          </div>
-        </form>
-        <form>
-          <fieldset
-            className=" d-flex align-items-center fs-6 border rounded"
-            style={{ color: "#595C5F", padding: "6px" }}
+      <h2 className="text-center mb-5">{"List of adverts"}</h2>
+      {/* Filters*/}
+      <div className="container mb-5">
+        <div className="row justify-content-center">
+          {/* input text */}
+          <form
+            className="col-12 col-md-4 col-lg-3 p-1"
+            style={{ height: "2.75rem" }}
+            onSubmit={(e) => e.preventDefault()}
           >
-            <legend className="col-form-label m-0 p-0">
-              <span>Categories:</span>
-            </legend>
-            <div className="d-flex gap-2">
-              <div className="form-check m-0 ms-2">
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  name="lifestyle"
-                  id="lifestyle"
-                  value="lifestyle"
-                  checked={checkboxes.lifestyle}
-                  onChange={handleCheckboxChange}
-                />
-                <label className="form-check-label" htmlFor="lifestyle">
-                  Lifestyle
-                </label>
-              </div>
-              <div className="form-check m-0">
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  name="mobile"
-                  id="mobile"
-                  value="mobile"
-                  checked={checkboxes.mobile}
-                  onChange={handleCheckboxChange}
-                />
-                <label className="form-check-label" htmlFor="mobile">
-                  Mobile
-                </label>
-              </div>
-              <div className="form-check m-0">
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  name="motor"
-                  id="motor"
-                  value="motor"
-                  checked={checkboxes.motor}
-                  onChange={handleCheckboxChange}
-                />
-                <label className="form-check-label" htmlFor="motor">
-                  Motor
-                </label>
-              </div>
-              <div className="form-check m-0">
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  name="work"
-                  id="work"
-                  value="work"
-                  checked={checkboxes.work}
-                  onChange={handleCheckboxChange}
-                />
-                <label className="form-check-label" htmlFor="work">
-                  Work
-                </label>
-              </div>
+            <div className="formField d-flex justify-content-center align-items-center p-0 m-0">
+              <input
+                className="formField-input form-control fs-6 h-100"
+                type="search"
+                name="search"
+                id="search"
+                placeholder="Search advert by name"
+                value={search} // The input value is controlled by the search state
+                onChange={handleSearchChange}
+              />
             </div>
-          </fieldset>
-        </form>
-      </div>
-      <div className="container">
-        <div className="row" style={{ gap: "1rem" }}>
-          {Array.isArray(filteredAdverts) ? (
-            filteredAdverts.map((advert: Advert) => (
-              <div
-                key={advert.id}
-                className="col-12 col-md-6 col-lg-4"
-                style={{ display: "flex", justifyContent: "center" }}
-              >
-                <AdvertItem advert={advert} />
+          </form>
+
+          {/* input checkbox */}
+          <form
+            className="col-12 col-md-8 col-lg-5 p-1"
+            style={{ height: "2.75rem" }}
+          >
+            <fieldset className="border rounded p-1">
+              <div className="row g-2">
+                <div className="form-check col-6 col-md-3 d-flex justify-content-center align-items-center">
+                  <input
+                    className="form-check-input me-2"
+                    type="checkbox"
+                    name="lifestyle"
+                    id="lifestyle"
+                    value="lifestyle"
+                    checked={checkboxes.lifestyle}
+                    onChange={handleCheckboxChange}
+                  />
+                  <label className="form-check-label" htmlFor="lifestyle">
+                    Lifestyle
+                  </label>
+                </div>
+                <div className="form-check col-6 col-md-3 d-flex justify-content-center align-items-center">
+                  <input
+                    className="form-check-input me-2"
+                    type="checkbox"
+                    name="mobile"
+                    id="mobile"
+                    value="mobile"
+                    checked={checkboxes.mobile}
+                    onChange={handleCheckboxChange}
+                  />
+                  <label className="form-check-label" htmlFor="mobile">
+                    Mobile
+                  </label>
+                </div>
+                <div className="form-check col-6 col-md-3 d-flex justify-content-center align-items-center">
+                  <input
+                    className="form-check-input me-2"
+                    type="checkbox"
+                    name="motor"
+                    id="motor"
+                    value="motor"
+                    checked={checkboxes.motor}
+                    onChange={handleCheckboxChange}
+                  />
+                  <label className="form-check-label" htmlFor="motor">
+                    Motor
+                  </label>
+                </div>
+                <div className="form-check col-6 col-md-3 d-flex justify-content-center align-items-center">
+                  <input
+                    className="form-check-input me-2"
+                    type="checkbox"
+                    name="work"
+                    id="work"
+                    value="work"
+                    checked={checkboxes.work}
+                    onChange={handleCheckboxChange}
+                  />
+                  <label className="form-check-label" htmlFor="work">
+                    Work
+                  </label>
+                </div>
               </div>
-            ))
-          ) : (
-            // TODO: Provide a better error message or link to navigate to new adverts
-            <h2 className="text-center">No adverts found</h2>
-          )}
+            </fieldset>
+          </form>
         </div>
+      </div>
+
+      {/* List of adverts */}
+      <div className="container">
+        {isLoading ? (
+          <Spinner isLoading={isLoading} />
+        ) : (
+          <div className="row justify-content-between ps-4 pe-4 gap-5">
+            {filteredAdverts.length > 0 ? (
+              filteredAdverts.map((advert: Advert) => (
+                <div
+                  key={advert.id}
+                  className="col-12 col-md-5 col-lg-3 p-0 d-flex justify-content-center"
+                >
+                  <AdvertItem advert={advert} />
+                </div>
+              ))
+            ) : (
+              <Modal
+                title="No adverts found"
+                showModal={showModal}
+                onClose={handleCloseModal}
+                buttons={[
+                  {
+                    textContent: "OK",
+                    className: "btn-primary",
+                    onClick: handleCloseModal,
+                  },
+                ]}
+              />
+            )}
+          </div>
+        )}
       </div>
     </>
   );
