@@ -5,12 +5,16 @@ import App from "./App.tsx";
 import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./components/auth/AuthProvider";
 import { AdvertsProvider } from "./pages/AdvertsProvider";
+import { Provider } from "react-redux";
+import configureStore from "./store/store";
 
 // Get the root element from the HTML document
 // We use the non-null assertion operator (!) to tell TypeScript that root will never be null
 const root = document.getElementById("root")!;
 
 const accessToken = localStorage.getItem("accessToken");
+
+const store = configureStore();
 
 // Render the App component inside the root element
 // Enable StrictMode in development mode to detect potential issues in components
@@ -19,7 +23,9 @@ createRoot(root).render(
     <BrowserRouter>
       <AuthProvider defaultIsLogged={!!accessToken}>
         <AdvertsProvider>
-          <App />
+          <Provider store={store}>
+            <App />
+          </Provider>
         </AdvertsProvider>
       </AuthProvider>
     </BrowserRouter>
