@@ -1,13 +1,18 @@
 import { useState } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { login } from "../components/auth/service";
-import { useAuth } from "../components/auth/context";
+// import { useAuth } from "../components/auth/context";
+import { useDispatch } from "react-redux";
 import Button from "../components/shared/Button";
 import FormField from "../components/shared/FormField";
+import { Login } from "../store/actions/creators";
 
 const LoginPage = () => {
   // Hook to manage the authentication state
-  const { onLogin } = useAuth();
+  // const { onLogin } = useAuth();
+
+  // Hook to dispatch actions
+  const dispatch = useDispatch();
 
   // Hook to manage the navigation
   const navigate = useNavigate();
@@ -46,7 +51,8 @@ const LoginPage = () => {
       }
 
       // Update the authentication state
-      onLogin();
+      // onLogin();
+      dispatch(Login()); // Dispatch the action to update the authentication state
 
       // Redirect to the previous page or to the home page
       navigate(location.state?.from ?? "/", { replace: true });
