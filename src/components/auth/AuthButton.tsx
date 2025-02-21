@@ -1,14 +1,24 @@
 import Button from "../shared/Button";
 import Modal from "../shared/Modal";
-import { useAuth } from "./context";
+// import { useAuth } from "./context";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { useDispatch, useSelector } from "react-redux";
+import { getIsLogged } from "../../store/selectors/selectors";
+import { Logout } from "../../store/actions/creators";
+
 const AuthButton = () => {
+  // Hook to dispatch actions
+  const dispatch = useDispatch();
+
+  // Hook to get the authentication state
+  const isLogged = useSelector(getIsLogged);
+
   const [showModal, setShowModal] = useState(false);
 
   // Hook to manage the authentication state
-  const { isLogged, onLogout } = useAuth();
+  // const { isLogged, onLogout } = useAuth();
 
   // Hook to navigate between routes
   const navigate = useNavigate();
@@ -37,7 +47,8 @@ const AuthButton = () => {
   };
 
   const handleConfirmLogout = () => {
-    onLogout();
+    // onLogout();
+    dispatch(Logout()); // Dispatch the action to update the authentication state
     setShowModal(false);
     localStorage.removeItem("accessToken");
     navigate("/");
