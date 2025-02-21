@@ -12,6 +12,9 @@ const adverts = (state = defaultState.adverts, action: Action) => {
     case "ADVERT_DELETED": {
       return state.filter((advert) => Number(advert.id) !== action.payload);
     }
+    default: {
+      return state;
+    }
   }
 };
 
