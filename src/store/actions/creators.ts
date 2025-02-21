@@ -1,25 +1,25 @@
 import { Advert } from "../../pages/types";
 import Action from "./type";
 
-const Login = (): Action => ({
+export const Login = (): Action => ({
   type: "LOGIN",
 });
 
-const Logout = (): Action => ({
+export const Logout = (): Action => ({
   type: "LOGOUT",
 });
 
-const AdvertsLoaded = (adverts: Advert[]): Action => ({
+export const AdvertsLoaded = (adverts: Advert[]): Action => ({
   type: "ADVERTS_LOADED",
   payload: adverts,
 });
 
-const AdvertCreated = (advert: Advert): Action => ({
+export const AdvertCreated = (advert: Advert): Action => ({
   type: "ADVERT_CREATED",
   payload: advert,
 });
 
-const AdvertDeleted = (id: number): Action => ({
+export const AdvertDeleted = (id: number): Action => ({
   type: "ADVERT_DELETED",
   payload: id,
 });
