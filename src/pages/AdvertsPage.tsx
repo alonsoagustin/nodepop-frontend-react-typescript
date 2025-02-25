@@ -1,17 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AdvertItem from "./Advert";
 import FormField from "../components/shared/FormField";
 import Spinner from "../components/shared/Spinner";
 import Modal from "../components/shared/Modal";
-import { useAdverts } from "./context";
 import type { Advert } from "./types";
+import { getUi, getAdverts } from "../store/selectors/selectors";
+import { useAppDispatch, useAppSelector } from "../store/store";
+import { AdvertsLoaded } from "../store/actions/creators";
 
 const AdvertsPage = () => {
-  // Hook to get the adverts from the context
-  const { adverts, isLoading } = useAdverts();
-  console.log("isLoading:", isLoading);
-
-  //
+  // Hook to manage the modal state
   const [showModal, setShowModal] = useState(true);
 
   // Hook to manage the search term
@@ -24,6 +22,19 @@ const AdvertsPage = () => {
     motor: true,
     work: true,
   });
+
+  // Hook to get the adverts from the store using the selector
+  const { data: adverts, loaded } = useAppSelector(getAdverts);
+
+  // Hook to get the ui state from the store using the selector
+  const { error, loading } = useAppSelector(getUi);
+
+  // Hook to dispatch actions to the store
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(AdvertsLoaded());
+  }, [dispatch]);
 
   // Function to handle the search input change
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,14 +50,12 @@ const AdvertsPage = () => {
     setChecked({ ...checkboxes, [e.target.name]: e.target.checked });
   };
 
+  // Function to handle the modal close
   const handleCloseModal = () => {
     setShowModal(false);
   };
 
-  // A useEffect is not needed here because the adverts data is already being
-  // fetched and managed by the context (useAdverts). The component re-renders
-  // automatically when the context updates, ensuring that the latest data
-  // is displayed without requiring an additional effect to fetch adverts again.
+  // Filter the adverts based on the search term and the selected categories
   const filteredAdverts = adverts.filter((advert: Advert) => {
     // Check if the advert name includes the search term
     const matchesSearch = advert.name
@@ -164,34 +173,54 @@ const AdvertsPage = () => {
 
       {/* List of adverts */}
       <div className="container">
-        {isLoading ? (
-          <Spinner isLoading={isLoading} />
-        ) : (
-          <div className="row gap-4 justify-content-center">
-            {filteredAdverts.length > 0 ? (
-              filteredAdverts.map((advert: Advert) => (
-                <div
-                  key={advert.id}
-                  className="col-12 col-md-5 col-lg-3 p-0 d-flex justify-content-center"
-                >
-                  <AdvertItem advert={advert} />
-                </div>
-              ))
-            ) : (
-              <Modal
-                title="No adverts found"
-                showModal={showModal}
-                onClose={handleCloseModal}
-                buttons={[
-                  {
-                    textContent: "OK",
-                    className: "btn-primary",
-                    onClick: handleCloseModal,
-                  },
-                ]}
-              />
-            )}
+        {loading && <Spinner isLoading />}
+
+        {/* if there is an error, show a modal with the error message
+         */}
+        {error && (
+          <Modal
+            title={error}
+            showModal={showModal}
+            onClose={handleCloseModal}
+            buttons={[
+              {
+                textContent: "OK",
+                className: "btn-primary",
+                onClick: handleCloseModal,
+              },
+            ]}
+          />
+        )}
+
+        {/* if there are adverts show the adverts
+         */}
+        {adverts.length > 0 && !loading && (
+          <div className="row justify-content-center gap-3">
+            {filteredAdverts.map((advert: Advert) => (
+              <div
+                key={advert.id}
+                className="col-12 col-md-5 col-lg-3 p-0 d-flex justify-content-center"
+              >
+                <AdvertItem advert={advert} />
+              </div>
+            ))}
           </div>
+        )}
+
+        {/* if no adverts are found, show a modal with a message*/}
+        {adverts.length === 0 && loaded && (
+          <Modal
+            title={"No adverts found"}
+            showModal={showModal}
+            onClose={handleCloseModal}
+            buttons={[
+              {
+                textContent: "OK",
+                className: "btn-primary",
+                onClick: handleCloseModal,
+              },
+            ]}
+          />
         )}
       </div>
     </>
