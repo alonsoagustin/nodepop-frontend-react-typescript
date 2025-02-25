@@ -13,6 +13,20 @@ type AdvertsLoaded = {
   payload: Advert[];
 };
 
+type AdvertsLoadedPending = {
+  type: "ADVERTS_LOADED_PENDING";
+};
+
+type AdvertsLoadedFullfilled = {
+  type: "ADVERTS_LOADED_FULFILLED";
+  payload: { data: Advert[]; loaded: boolean };
+};
+
+type AdvertsLoadedRejected = {
+  type: "ADVERTS_LOADED_REJECTED";
+  payload: string;
+};
+
 type AdvertCreated = {
   type: "ADVERT_CREATED";
   payload: Advert;
@@ -23,6 +37,14 @@ type AdvertDeleted = {
   payload: number;
 };
 
-type Action = Login | Logout | AdvertsLoaded | AdvertCreated | AdvertDeleted;
+type Action =
+  | Login
+  | Logout
+  | AdvertsLoaded
+  | AdvertsLoadedPending
+  | AdvertsLoadedFullfilled
+  | AdvertsLoadedRejected
+  | AdvertCreated
+  | AdvertDeleted;
 
 export default Action;
