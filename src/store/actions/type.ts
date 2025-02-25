@@ -27,6 +27,10 @@ type AdvertsLoadedRejected = {
   payload: string;
 };
 
+type AdvertLoaded = {
+  type: "ADVERT_LOADED";
+};
+
 type AdvertCreated = {
   type: "ADVERT_CREATED";
   payload: Advert;
@@ -44,6 +48,7 @@ type Action =
   | AdvertsLoadedPending
   | AdvertsLoadedFullfilled
   | AdvertsLoadedRejected
+  | AdvertLoaded
   | AdvertCreated
   | AdvertDeleted;
 
