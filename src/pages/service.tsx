@@ -14,11 +14,14 @@ export const getAllAdverts = async (): Promise<Advert[]> => {
   return data;
 };
 
-export const getAdvertById = async (id: string) => {
+export const getAdvertById = async (id: string): Promise<Advert> => {
   const response = await fetch(`http://localhost:3001/api/v1/adverts/${id}`, {
     headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
   });
-  const data = await response.json();
+
+  if (!response.ok) throw new Error(response.statusText);
+
+  const data: Advert = await response.json();
   return data;
 };
 
