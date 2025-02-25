@@ -16,7 +16,6 @@ const Advert = ({ advert }: Props) => {
     const currentTarget = event.currentTarget.textContent?.trim() as string;
 
     if (currentTarget === "Detail") {
-      console.log("Detail");
       navigate(`/adverts/${advert.id}`);
     }
   };
