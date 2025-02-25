@@ -1,14 +1,13 @@
 import { Advert, ErrorAdvert } from "./types";
 
-export const getAllAdverts = async (): Promise<Advert[] | ErrorAdvert> => {
+export const getAllAdverts = async (): Promise<Advert[]> => {
   const response = await fetch("http://localhost:3001/api/v1/adverts", {
-    headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    },
   });
 
-  if (!response.ok) {
-    const errorData: ErrorAdvert = await response.json();
-    return errorData;
-  }
+  if (!response.ok) throw new Error(response.statusText);
 
   const data: Advert[] = await response.json();
 
