@@ -2,7 +2,8 @@ import { Advert } from "../../pages/types";
 
 type State = {
   auth: boolean;
-  adverts: Advert[];
+  adverts: { data: Advert[]; loaded: boolean };
+  ui: { error: string | null; loading: boolean };
 };
 
 export default State;
