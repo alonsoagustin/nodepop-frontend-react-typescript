@@ -1,4 +1,4 @@
-import { getAllAdverts } from "../../pages/service";
+import { getAdvertById, getAllAdverts } from "../../pages/service";
 import { Advert } from "../../pages/types";
 import { AppThunk } from "../store";
 import Action from "./type";
@@ -37,6 +37,23 @@ export const AdvertsLoadedFulfilled = (data: Advert[], loaded: boolean) => ({
   type: "ADVERTS_LOADED_FULFILLED",
   payload: { data, loaded },
 });
+
+export const AdvertLoaded = (advertId: string): AppThunk<Promise<void>> => {
+  return async function (dispatch, getState) {
+    const state = getState();
+    if (state.adverts.loaded) return;
+
+    dispatch(AdvertsLoadedPending());
+    try {
+      const data = await getAdvertById(advertId);
+      dispatch(AdvertsLoadedFulfilled([data], false));
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Ooops! Something went wrong";
+      dispatch(AdvertsLoadedRejected(errorMessage));
+    }
+  };
+};
 
 export const AdvertsLoadedRejected = (error: string) => ({
   type: "ADVERTS_LOADED_REJECTED",
