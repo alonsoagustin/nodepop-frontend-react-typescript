@@ -2,15 +2,20 @@ import {
   compose,
   combineReducers,
   legacy_createStore as createStore,
+  applyMiddleware,
+  Action,
 } from "redux";
 import auth from "./reducers/auth";
 import adverts from "./reducers/adverts";
+import ui from "./reducers/ui";
 import State from "./state/type";
+import { useDispatch, useSelector } from "react-redux";
+import * as thunk from "redux-thunk";
 
 // Extend the Window interface to include the Redux DevTools extension
 declare global {
   interface Window {
-    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
+    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: typeof compose;
   }
 }
 
@@ -21,13 +26,28 @@ const configureStore = (preloadedState: Partial<State>) => {
   const composeEnhancers =
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-  const rootReducer = combineReducers({ auth, adverts });
+  const rootReducer = combineReducers({ auth, adverts, ui });
   const store = createStore(
     rootReducer, // Combine the reducers
     preloadedState as never, // Create the store with the initial state
-    composeEnhancers() // Use the Redux DevTools extension
+    composeEnhancers(applyMiddleware(thunk.withExtraArgument<State, Action>())) // Use the Redux DevTools extension
   );
   return store;
 };
+
+export type AppStore = ReturnType<typeof configureStore>;
+export type AppGetState = AppStore["getState"];
+export type AppDispatch = AppStore["dispatch"];
+export type RootState = ReturnType<AppGetState>;
+
+export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
+export const useAppSelector = useSelector.withTypes<RootState>();
+
+export type AppThunk<ReturnType = void> = thunk.ThunkAction<
+  ReturnType,
+  RootState,
+  unknown,
+  Action
+>;
 
 export default configureStore;
