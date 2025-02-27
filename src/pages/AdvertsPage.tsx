@@ -15,21 +15,21 @@ import {
   TagsLoaded,
   AdvertsLoaded,
   FilterAdvertsByTag,
+  FilterAdvertsByName,
 } from "../store/actions/creators";
 
 const AdvertsPage = () => {
   // Hook to manage the modal state
   const [showModal, setShowModal] = useState(true);
 
-  // Hook to manage the search term
-  const [search, setSearch] = useState("");
-
   // Hook to get the adverts from the store using the selector
   const { data: adverts, loaded: advertsLoaded } = useAppSelector(getAdverts);
 
+  // Hook to get the tags from the store using the selector
   const { data: tags, loaded: tagsLoaded } = useAppSelector(getTags);
 
-  const { tags: filters } = useAppSelector(getFilters);
+  // Hook to get the filters from the store using the selector
+  const { tags: selectedTags, name: searchQuery } = useAppSelector(getFilters);
 
   // Hook to get the ui state from the store using the selector
   const { error, loading } = useAppSelector(getUi);
@@ -47,7 +47,7 @@ const AdvertsPage = () => {
     // This function will be executed when the input value changes
     // It will update the search state with the new value
     // The search state will be used to filter the adverts
-    setSearch(e.target.value);
+    dispatch(FilterAdvertsByName(e.target.value));
   };
 
   // Function to handle the checkbox change
@@ -61,10 +61,15 @@ const AdvertsPage = () => {
   };
 
   // Filter the adverts based on the search term and the selected categories
-  const filteredAdverts = adverts.filter((advert: Advert) => {
-    if (!filters.length) return advert;
+  const filteredAdverts = adverts.filter(({ tags, name }) => {
+    const normalizedSearch = searchQuery.toLowerCase();
+    const matchesSearch = name.toLowerCase().includes(normalizedSearch);
 
-    if (advert.tags.some((tag) => filters.includes(tag))) return advert;
+    const hasSelectedTags = !!selectedTags.length;
+    const matchesTags =
+      !hasSelectedTags || tags.some((tag) => selectedTags.includes(tag));
+
+    return matchesSearch && matchesTags;
   });
 
   return (
@@ -83,7 +88,7 @@ const AdvertsPage = () => {
               type="search"
               name="search"
               id="search"
-              value={search}
+              value={searchQuery}
               placeholder="Search advert by name"
               onChange={handleSearchChange}
               className={{
@@ -108,7 +113,7 @@ const AdvertsPage = () => {
                       inputBeforeLable
                       type="checkbox"
                       id={tag}
-                      checked={filters.includes(tag)}
+                      checked={selectedTags.includes(tag)}
                       onChange={handleCheckboxChange}
                       label={tag}
                       className={{
