@@ -4,9 +4,18 @@ import FormField from "../components/shared/FormField";
 import Spinner from "../components/shared/Spinner";
 import Modal from "../components/shared/Modal";
 import type { Advert } from "./types";
-import { getUi, getAdverts } from "../store/selectors/selectors";
+import {
+  getUi,
+  getTags,
+  getAdverts,
+  getFilters,
+} from "../store/selectors/selectors";
 import { useAppDispatch, useAppSelector } from "../store/store";
-import { AdvertsLoaded } from "../store/actions/creators";
+import {
+  TagsLoaded,
+  AdvertsLoaded,
+  FilterAdvertsByTag,
+} from "../store/actions/creators";
 
 const AdvertsPage = () => {
   // Hook to manage the modal state
@@ -15,16 +24,12 @@ const AdvertsPage = () => {
   // Hook to manage the search term
   const [search, setSearch] = useState("");
 
-  // Hook to manage the selected categories
-  const [checkboxes, setChecked] = useState<Record<string, boolean>>({
-    lifestyle: true,
-    mobile: true,
-    motor: true,
-    work: true,
-  });
-
   // Hook to get the adverts from the store using the selector
-  const { data: adverts, loaded } = useAppSelector(getAdverts);
+  const { data: adverts, loaded: advertsLoaded } = useAppSelector(getAdverts);
+
+  const { data: tags, loaded: tagsLoaded } = useAppSelector(getTags);
+
+  const { tags: filters } = useAppSelector(getFilters);
 
   // Hook to get the ui state from the store using the selector
   const { error, loading } = useAppSelector(getUi);
@@ -34,6 +39,7 @@ const AdvertsPage = () => {
 
   useEffect(() => {
     dispatch(AdvertsLoaded());
+    dispatch(TagsLoaded());
   }, [dispatch]);
 
   // Function to handle the search input change
@@ -46,8 +52,7 @@ const AdvertsPage = () => {
 
   // Function to handle the checkbox change
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Copy the previous state modifying the checkbox that has changed
-    setChecked({ ...checkboxes, [e.target.name]: e.target.checked });
+    dispatch(FilterAdvertsByTag(e.target.name));
   };
 
   // Function to handle the modal close
@@ -57,19 +62,9 @@ const AdvertsPage = () => {
 
   // Filter the adverts based on the search term and the selected categories
   const filteredAdverts = adverts.filter((advert: Advert) => {
-    // Check if the advert name includes the search term
-    const matchesSearch = advert.name
-      .toLowerCase()
-      .includes(search.toLowerCase());
+    if (!filters.length) return advert;
 
-    // Get the keys of the checkboxes object
-    const checkboxesKeys = Object.keys(checkboxes);
-
-    // Check if the advert tags include the selected categories
-    const matchesCategory = checkboxesKeys.some(
-      (key) => checkboxes[key] && advert.tags.includes(key)
-    );
-    return matchesSearch && matchesCategory;
+    if (advert.tags.some((tag) => filters.includes(tag))) return advert;
   });
 
   return (
@@ -100,74 +95,34 @@ const AdvertsPage = () => {
           </form>
 
           {/* input checkbox */}
-          <form
-            className="col-12 col-md-8 col-lg-5 p-1"
-            style={{ height: "2.75rem" }}
-          >
-            <fieldset className="border rounded p-1">
-              <div className="row g-2">
-                <FormField
-                  inputBeforeLable
-                  type="checkbox"
-                  id="lifestyle"
-                  checked={checkboxes.lifestyle}
-                  onChange={handleCheckboxChange}
-                  label="Lifestyle"
-                  className={{
-                    container:
-                      "form-check col-6 col-md-3 d-flex justify-content-center align-items-center",
-                    labelClass: "form-check-label",
-                    input: "form-check-input me-2",
-                  }}
-                />
-
-                <FormField
-                  inputBeforeLable
-                  type="checkbox"
-                  id="mobile"
-                  checked={checkboxes.mobile}
-                  onChange={handleCheckboxChange}
-                  label="Mobile"
-                  className={{
-                    container:
-                      "form-check col-6 col-md-3 d-flex justify-content-center align-items-center",
-                    labelClass: "form-check-label",
-                    input: "form-check-input me-2",
-                  }}
-                />
-
-                <FormField
-                  inputBeforeLable
-                  type="checkbox"
-                  id="motor"
-                  checked={checkboxes.motor}
-                  onChange={handleCheckboxChange}
-                  label="Motor"
-                  className={{
-                    container:
-                      "form-check col-6 col-md-3 d-flex justify-content-center align-items-center",
-                    labelClass: "form-check-label",
-                    input: "form-check-input me-2",
-                  }}
-                />
-
-                <FormField
-                  inputBeforeLable
-                  type="checkbox"
-                  id="work"
-                  checked={checkboxes.work}
-                  onChange={handleCheckboxChange}
-                  label="Work"
-                  className={{
-                    container:
-                      "form-check col-6 col-md-3 d-flex justify-content-center align-items-center",
-                    labelClass: "form-check-label",
-                    input: "form-check-input me-2",
-                  }}
-                />
-              </div>
-            </fieldset>
-          </form>
+          {tagsLoaded && (
+            <form
+              className="col-12 col-md-8 col-lg-5 p-1"
+              style={{ height: "2.75rem" }}
+            >
+              <fieldset className="border rounded p-1">
+                <div className="row g-2">
+                  {tags.map((tag) => (
+                    <FormField
+                      key={tag}
+                      inputBeforeLable
+                      type="checkbox"
+                      id={tag}
+                      checked={filters.includes(tag)}
+                      onChange={handleCheckboxChange}
+                      label={tag}
+                      className={{
+                        container:
+                          "form-check col-6 col-md-3 d-flex justify-content-center align-items-center",
+                        labelClass: "form-check-label",
+                        input: "form-check-input me-2",
+                      }}
+                    />
+                  ))}
+                </div>
+              </fieldset>
+            </form>
+          )}
         </div>
       </div>
 
@@ -208,7 +163,7 @@ const AdvertsPage = () => {
         )}
 
         {/* if no adverts are found, show a modal with a message*/}
-        {adverts.length === 0 && loaded && (
+        {adverts.length === 0 && advertsLoaded && (
           <Modal
             title={"No adverts found"}
             showModal={showModal}
