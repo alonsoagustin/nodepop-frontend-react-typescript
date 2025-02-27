@@ -54,6 +54,11 @@ type FilterAdvertsByTag = {
   payload: string;
 };
 
+type FilterAdvertsByName = {
+  type: "FILTER_ADVERTS_BY_NAME";
+  payload: string;
+};
+
 type AdvertCreated = {
   type: "ADVERT_CREATED";
   payload: Advert;
@@ -73,6 +78,7 @@ type Action =
   | AdvertsLoadedRejected
   | AdvertLoaded
   | FilterAdvertsByTag
+  | FilterAdvertsByName
   | TagsLoaded
   | TagsLoadedPending
   | TagsLoadedFullfilled
