@@ -25,6 +25,15 @@ export const getAdvertById = async (id: string): Promise<Advert> => {
   return data;
 };
 
+export const getTags = async (): Promise<string[]> => {
+  const response = await fetch("http://localhost:3001/api/v1/adverts/tags");
+
+  if (!response.ok) throw new Error(response.statusText);
+
+  const data: string[] = await response.json();
+  return data;
+};
+
 export const createAdvert = async (
   advert: FormData
 ): Promise<Advert | ErrorAdvert> => {
