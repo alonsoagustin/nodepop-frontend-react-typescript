@@ -1,4 +1,4 @@
-import { getAdvertById, getAllAdverts } from "../../pages/service";
+import { getTags, getAdvertById, getAllAdverts } from "../../pages/service";
 import { Advert } from "../../pages/types";
 import { AppThunk } from "../store";
 import Action from "./type";
@@ -38,6 +38,11 @@ export const AdvertsLoadedFulfilled = (data: Advert[], loaded: boolean) => ({
   payload: { data, loaded },
 });
 
+export const AdvertsLoadedRejected = (error: string) => ({
+  type: "ADVERTS_LOADED_REJECTED",
+  payload: error,
+});
+
 export const AdvertLoaded = (advertId: string): AppThunk<Promise<void>> => {
   return async function (dispatch, getState) {
     const state = getState();
@@ -55,9 +60,41 @@ export const AdvertLoaded = (advertId: string): AppThunk<Promise<void>> => {
   };
 };
 
-export const AdvertsLoadedRejected = (error: string) => ({
-  type: "ADVERTS_LOADED_REJECTED",
+export const TagsLoaded = (): AppThunk<Promise<void>> => {
+  return async function (dispatch, getState) {
+    const state = getState();
+    if (state.tags.loaded) return;
+
+    dispatch(TagsLoadedPending());
+
+    try {
+      const data = await getTags();
+      dispatch(TagsLoadedFulfilled(data));
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Ooops! Something went wrong";
+      dispatch(TagsLoadedRejected(errorMessage));
+    }
+  };
+};
+
+export const TagsLoadedPending = () => ({
+  type: "TAGS_LOADED_PENDING",
+});
+
+export const TagsLoadedFulfilled = (data: string[]) => ({
+  type: "TAGS_LOADED_FULFILLED",
+  payload: data,
+});
+
+export const TagsLoadedRejected = (error: string) => ({
+  type: "TAGS_LOADED_REJECTED",
   payload: error,
+});
+
+export const FilterAdvertsByTag = (TagName: string) => ({
+  type: "FILTER_ADVERTS_BY_TAG",
+  payload: TagName,
 });
 
 export const AdvertCreated = (advert: Advert): Action => ({
