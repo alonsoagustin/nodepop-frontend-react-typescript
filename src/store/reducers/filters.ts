@@ -10,6 +10,8 @@ const filters = (state = defaultState.filters, action: Action) => {
           ? state.tags.filter((tag) => tag !== action.payload)
           : [...state.tags, action.payload],
       };
+    case "FILTER_ADVERTS_BY_NAME":
+      return { ...state, name: action.payload };
     default:
       return state;
   }
