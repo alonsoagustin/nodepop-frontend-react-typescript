@@ -31,6 +31,29 @@ type AdvertLoaded = {
   type: "ADVERT_LOADED";
 };
 
+type TagsLoaded = {
+  type: "TAGS_LOADED";
+};
+
+type TagsLoadedPending = {
+  type: "TAGS_LOADED_PENDING";
+};
+
+type TagsLoadedFullfilled = {
+  type: "TAGS_LOADED_FULFILLED";
+  payload: string[];
+};
+
+type TagsLoadedRejected = {
+  type: "TAGS_LOADED_REJECTED";
+  payload: string;
+};
+
+type FilterAdvertsByTag = {
+  type: "FILTER_ADVERTS_BY_TAG";
+  payload: string;
+};
+
 type AdvertCreated = {
   type: "ADVERT_CREATED";
   payload: Advert;
@@ -49,6 +72,11 @@ type Action =
   | AdvertsLoadedFullfilled
   | AdvertsLoadedRejected
   | AdvertLoaded
+  | FilterAdvertsByTag
+  | TagsLoaded
+  | TagsLoadedPending
+  | TagsLoadedFullfilled
+  | TagsLoadedRejected
   | AdvertCreated
   | AdvertDeleted;
 
