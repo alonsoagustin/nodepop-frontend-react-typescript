@@ -7,10 +7,12 @@ import {
 } from "redux";
 import auth from "./reducers/auth";
 import adverts from "./reducers/adverts";
+import tags from "./reducers/tags";
 import ui from "./reducers/ui";
 import State from "./state/type";
 import { useDispatch, useSelector } from "react-redux";
 import * as thunk from "redux-thunk";
+import filters from "./reducers/filters";
 
 // Extend the Window interface to include the Redux DevTools extension
 declare global {
@@ -26,7 +28,7 @@ const configureStore = (preloadedState: Partial<State>) => {
   const composeEnhancers =
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-  const rootReducer = combineReducers({ auth, adverts, ui });
+  const rootReducer = combineReducers({ auth, adverts, tags, filters, ui });
   const store = createStore(
     rootReducer, // Combine the reducers
     preloadedState as never, // Create the store with the initial state
