@@ -4,7 +4,7 @@ const defaultState: State = {
   auth: false,
   adverts: { data: [], loaded: false },
   tags: { data: [], loaded: false },
-  filters: { tags: [] },
+  filters: { tags: [], name: "" },
   ui: { error: null, loading: false },
 };
 
