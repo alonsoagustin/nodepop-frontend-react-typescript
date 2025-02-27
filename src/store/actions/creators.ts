@@ -92,9 +92,14 @@ export const TagsLoadedRejected = (error: string) => ({
   payload: error,
 });
 
-export const FilterAdvertsByTag = (TagName: string) => ({
+export const FilterAdvertsByTag = (tag: string) => ({
   type: "FILTER_ADVERTS_BY_TAG",
-  payload: TagName,
+  payload: tag,
+});
+
+export const FilterAdvertsByName = (name: string) => ({
+  type: "FILTER_ADVERTS_BY_NAME",
+  payload: name,
 });
 
 export const AdvertCreated = (advert: Advert): Action => ({
