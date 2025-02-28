@@ -1,13 +1,25 @@
 import { Advert } from "../../pages/types";
 
-type Login = {
-  type: "LOGIN";
+type AuthLoginPending = {
+  type: "AUTH_LOGIN_PENDING";
 };
 
-type Logout = {
-  type: "LOGOUT";
+type AuthLoginFulfilled = {
+  type: "AUTH_LOGIN_FULFILLED";
 };
 
+type AuthLoginRejected = {
+  type: "AUTH_LOGIN_REJECTED";
+  payload: string;
+};
+
+type AuthLogout = {
+  type: "AUTH_LOGOUT";
+};
+
+type ResetUi = {
+  type: "RESET_UI";
+};
 type AdvertsLoaded = {
   type: "ADVERTS_LOADED";
   payload: Advert[];
@@ -70,8 +82,11 @@ type AdvertDeleted = {
 };
 
 type Action =
-  | Login
-  | Logout
+  | AuthLoginPending
+  | AuthLoginFulfilled
+  | AuthLoginRejected
+  | AuthLogout
+  | ResetUi
   | AdvertsLoaded
   | AdvertsLoadedPending
   | AdvertsLoadedFullfilled
