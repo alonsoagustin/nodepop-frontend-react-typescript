@@ -1,4 +1,4 @@
-interface Credentials {
+export interface Credentials {
   email: string;
   password: string;
 }
@@ -9,6 +9,8 @@ export const login = async (credentials: Credentials) => {
     headers: { "content-type": "application/json" },
     body: JSON.stringify(credentials),
   });
+
+  if (!response.ok) throw new Error(response.statusText);
 
   const { accessToken } = await response.json();
   return accessToken;
