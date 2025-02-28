@@ -3,10 +3,10 @@ import Action from "../actions/type";
 
 const auth = (state = defaultState.auth, action: Action) => {
   switch (action.type) {
-    case "LOGIN": {
+    case "AUTH_LOGIN_FULFILLED": {
       return true;
     }
-    case "LOGOUT": {
+    case "AUTH_LOGOUT": {
       return false;
     }
     default: {
