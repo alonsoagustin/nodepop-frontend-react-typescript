@@ -1,14 +1,46 @@
+import { Credentials, login } from "../../components/auth/service";
 import { getTags, getAdvertById, getAllAdverts } from "../../pages/service";
 import { Advert } from "../../pages/types";
 import { AppThunk } from "../store";
 import Action from "./type";
 
-export const Login = (): Action => ({
-  type: "LOGIN",
+export const AuthLoginPending = () => ({
+  type: "AUTH_LOGIN_PENDING",
 });
 
-export const Logout = (): Action => ({
-  type: "LOGOUT",
+export const AuthLoginFulfilled = () => ({
+  type: "AUTH_LOGIN_FULFILLED",
+});
+
+export const AuthLoginRejected = (error: string) => ({
+  type: "AUTH_LOGIN_REJECTED",
+  payload: error,
+});
+
+export const AuthLogin = (
+  credentials: Credentials
+): AppThunk<Promise<void>> => {
+  return async function (dispatch) {
+    try {
+      dispatch(AuthLoginPending());
+      const response = await login(credentials);
+      localStorage.setItem("accessToken", response);
+      dispatch(AuthLoginFulfilled());
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Ooops! Something went wrong";
+      dispatch(AuthLoginRejected(errorMessage));
+    }
+  };
+};
+
+export const AuthLogout = (): AppThunk => (dispatch) => {
+  localStorage.removeItem("accessToken");
+  dispatch({ type: "AUTH_LOGOUT" });
+};
+
+export const ResetUi = (): Action => ({
+  type: "RESET_UI",
 });
 
 export const AdvertsLoaded = (): AppThunk<Promise<void>> => {
