@@ -1,5 +1,10 @@
 import { Credentials, login } from "../../components/auth/service";
-import { getTags, getAdvertById, getAllAdverts } from "../../pages/service";
+import {
+  getTags,
+  getAdvertById,
+  getAllAdverts,
+  deleteAdvertById,
+} from "../../pages/service";
 import { Advert } from "../../pages/types";
 import { AppThunk } from "../store";
 import Action from "./type";
@@ -76,10 +81,7 @@ export const AdvertsLoadedRejected = (error: string) => ({
 });
 
 export const AdvertLoaded = (advertId: string): AppThunk<Promise<void>> => {
-  return async function (dispatch, getState) {
-    const state = getState();
-    if (state.adverts.loaded) return;
-
+  return async function (dispatch) {
     dispatch(AdvertsLoadedPending());
     try {
       const data = await getAdvertById(advertId);
@@ -139,7 +141,29 @@ export const AdvertCreated = (advert: Advert): Action => ({
   payload: advert,
 });
 
-export const AdvertDeleted = (id: number): Action => ({
-  type: "ADVERT_DELETED",
-  payload: id,
+export const AdvertDeleted = (id: string): AppThunk<Promise<void>> =>
+  async function (dispatch) {
+    dispatch(AdvertDeletedPending());
+    try {
+      const advertDeleted = await deleteAdvertById(id);
+      dispatch(AdvertDeletedFulfilled(advertDeleted));
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Ooops! Something went wrong";
+      dispatch(AdvertDeletedRejected(errorMessage));
+    }
+  };
+
+export const AdvertDeletedPending = () => ({
+  type: "ADVERT_DELETED_PENDING",
+});
+
+export const AdvertDeletedFulfilled = (advert: Advert) => ({
+  type: "ADVERT_DELETED_FULFILLED",
+  payload: advert,
+});
+
+export const AdvertDeletedRejected = (error: string) => ({
+  type: "ADVERT_DELETED_REJECTED",
+  payload: error,
 });
