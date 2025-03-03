@@ -3,16 +3,10 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Button from "../components/shared/Button";
 
-interface Props {
-  advert: Advert;
-}
-
-const Advert = ({ advert }: Props) => {
+const Advert = ({ advert }: { advert: Advert }) => {
   const navigate = useNavigate();
 
   const handleClickButton = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-
     const currentTarget = event.currentTarget.textContent?.trim() as string;
 
     if (currentTarget === "Detail") {
