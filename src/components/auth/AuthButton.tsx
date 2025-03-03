@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { getIsLogged } from "../../store/selectors/selectors";
-import { AuthLogout } from "../../store/actions/creators";
+import { AuthLogout, ResetUi } from "../../store/actions/creators";
 import { useAppDispatch } from "../../store/store";
 
 const AuthButton = () => {
@@ -47,6 +47,7 @@ const AuthButton = () => {
 
   const handleConfirmLogout = () => {
     dispatch(AuthLogout());
+    dispatch(ResetUi());
     setShowModal(false);
     navigate("/");
   };
