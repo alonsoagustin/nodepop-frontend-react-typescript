@@ -5,6 +5,7 @@ import {
   getAdvertById,
   getAllAdverts,
   deleteAdvertById,
+  createAdvert,
 } from "../../pages/service";
 import { Advert } from "../../pages/types";
 import { AppThunk } from "../store";
@@ -82,8 +83,12 @@ export const AdvertsLoadedRejected = (error: string) => ({
 });
 
 export const AdvertLoaded = (advertId: string): AppThunk<Promise<void>> => {
-  return async function (dispatch) {
+  return async function (dispatch, getState) {
+    const state = getState();
+    if (state.adverts.loaded) return;
+
     dispatch(AdvertsLoadedPending());
+
     try {
       const data = await getAdvertById(advertId);
       dispatch(AdvertsLoadedFulfilled([data], false));
@@ -104,7 +109,7 @@ export const TagsLoaded = (): AppThunk<Promise<void>> => {
 
     try {
       const data = await getTags();
-      dispatch(TagsLoadedFulfilled(data));
+      dispatch(TagsLoadedFulfilled(data, true));
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "Ooops! Something went wrong";
@@ -117,9 +122,9 @@ export const TagsLoadedPending = () => ({
   type: "TAGS_LOADED_PENDING",
 });
 
-export const TagsLoadedFulfilled = (data: string[]) => ({
+export const TagsLoadedFulfilled = (data: string[], loaded: boolean) => ({
   type: "TAGS_LOADED_FULFILLED",
-  payload: data,
+  payload: { data, loaded },
 });
 
 export const TagsLoadedRejected = (error: string) => ({
@@ -137,9 +142,35 @@ export const FilterAdvertsByName = (name: string) => ({
   payload: name,
 });
 
-export const AdvertCreated = (advert: Advert): Action => ({
-  type: "ADVERT_CREATED",
+export const AdvertCreated = (
+  advert: FormData,
+  navigate: NavigateFunction
+): AppThunk<Promise<void>> =>
+  async function (dispatch) {
+    dispatch(AdvertCreatedPending());
+    try {
+      const advertCreated = await createAdvert(advert);
+      dispatch(AdvertCreatedFulfilled(advertCreated));
+      navigate(`/adverts/${advertCreated.id}`);
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Ooops! Something went wrong";
+      dispatch(AdvertCreatedRejected(errorMessage));
+    }
+  };
+
+export const AdvertCreatedPending = () => ({
+  type: "ADVERT_CREATED_PENDING",
+});
+
+export const AdvertCreatedFulfilled = (advert: Advert) => ({
+  type: "ADVERT_CREATED_FULFILLED",
   payload: advert,
+});
+
+export const AdvertCreatedRejected = (error: string) => ({
+  type: "ADVERT_CREATED_REJECTED",
+  payload: error,
 });
 
 export const AdvertDeleted = (
@@ -149,14 +180,13 @@ export const AdvertDeleted = (
   async function (dispatch) {
     dispatch(AdvertDeletedPending());
     try {
-      const advertDeleted = await deleteAdvertById(id);
-      dispatch(AdvertDeletedFulfilled(advertDeleted));
+      await deleteAdvertById(id);
+      dispatch(AdvertDeletedFulfilled(id));
       navigate("/");
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "Ooops! Something went wrong";
       dispatch(AdvertDeletedRejected(errorMessage));
-      navigate("/404");
     }
   };
 
@@ -164,9 +194,9 @@ export const AdvertDeletedPending = () => ({
   type: "ADVERT_DELETED_PENDING",
 });
 
-export const AdvertDeletedFulfilled = (advert: Advert) => ({
+export const AdvertDeletedFulfilled = (advertId: string) => ({
   type: "ADVERT_DELETED_FULFILLED",
-  payload: advert,
+  payload: { id: advertId },
 });
 
 export const AdvertDeletedRejected = (error: string) => ({
