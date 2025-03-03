@@ -3,6 +3,9 @@ import Action from "../actions/type";
 
 const adverts = (state = defaultState.adverts, action: Action) => {
   switch (action.type) {
+    case "AUTH_LOGOUT": {
+      return { ...state, data: [], loaded: false };
+    }
     case "ADVERTS_LOADED_PENDING": {
       return { data: [], loaded: false };
     }
@@ -20,9 +23,11 @@ const adverts = (state = defaultState.adverts, action: Action) => {
       // TODO
       return state;
     }
-    case "ADVERT_DELETED": {
-      // TODO
-      return state;
+    case "ADVERT_DELETED_FULFILLED": {
+      return {
+        ...state,
+        data: state.data.filter((advert) => advert.id !== action.payload.id),
+      };
     }
     default: {
       return state;
