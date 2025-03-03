@@ -1,4 +1,4 @@
-import { Advert, ErrorAdvert } from "./types";
+import { Advert } from "./types";
 
 export const getAllAdverts = async (): Promise<Advert[]> => {
   const response = await fetch("http://localhost:3001/api/v1/adverts", {
@@ -35,9 +35,7 @@ export const getTags = async (): Promise<string[]> => {
   return data;
 };
 
-export const createAdvert = async (
-  advert: FormData
-): Promise<Advert | ErrorAdvert> => {
+export const createAdvert = async (advert: FormData): Promise<Advert> => {
   const response = await fetch("http://localhost:3001/api/v1/adverts", {
     method: "POST",
     headers: {
@@ -46,10 +44,7 @@ export const createAdvert = async (
     body: advert,
   });
 
-  if (!response.ok) {
-    const errorData: ErrorAdvert = await response.json();
-    throw errorData;
-  }
+  if (!response.ok) throw new Error(response.statusText);
 
   const data: Advert = await response.json();
 
