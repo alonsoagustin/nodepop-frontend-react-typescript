@@ -6,12 +6,6 @@ const adverts = (state = defaultState.adverts, action: Action) => {
     case "AUTH_LOGOUT": {
       return { ...state, data: [], loaded: false };
     }
-    case "ADVERTS_LOADED_PENDING": {
-      return { data: [], loaded: false };
-    }
-    case "ADVERTS_LOADED_REJECTED": {
-      return { data: [], loaded: false };
-    }
     case "ADVERTS_LOADED_FULFILLED": {
       return {
         ...state,
@@ -19,15 +13,14 @@ const adverts = (state = defaultState.adverts, action: Action) => {
         loaded: action.payload.loaded,
       };
     }
-    case "ADVERT_CREATED": {
-      // TODO
-      return state;
-    }
     case "ADVERT_DELETED_FULFILLED": {
       return {
         ...state,
         data: state.data.filter((advert) => advert.id !== action.payload.id),
       };
+    }
+    case "ADVERT_CREATED_FULFILLED": {
+      return { ...state, data: [...state.data, action.payload] };
     }
     default: {
       return state;
