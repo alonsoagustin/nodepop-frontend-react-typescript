@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import AdvertItem from "./Advert";
 import FormField from "../components/shared/FormField";
 import Spinner from "../components/shared/Spinner";
@@ -16,12 +16,10 @@ import {
   AdvertsLoaded,
   FilterAdvertsByTag,
   FilterAdvertsByName,
+  ResetUi,
 } from "../store/actions/creators";
 
 const AdvertsPage = () => {
-  // Hook to manage the modal state
-  const [showModal, setShowModal] = useState(true);
-
   // Hook to get the adverts from the store using the selector
   const { data: adverts, loaded: advertsLoaded } = useAppSelector(getAdverts);
 
@@ -38,6 +36,7 @@ const AdvertsPage = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    dispatch(ResetUi());
     dispatch(AdvertsLoaded());
     dispatch(TagsLoaded());
   }, [dispatch]);
@@ -57,7 +56,7 @@ const AdvertsPage = () => {
 
   // Function to handle the modal close
   const handleCloseModal = () => {
-    setShowModal(false);
+    dispatch(ResetUi());
   };
 
   // Filter the adverts based on the search term and the selected categories
@@ -140,7 +139,7 @@ const AdvertsPage = () => {
         {error && (
           <Modal
             title={error}
-            showModal={showModal}
+            showModal={!!error}
             onClose={handleCloseModal}
             buttons={[
               {
@@ -171,7 +170,7 @@ const AdvertsPage = () => {
         {adverts.length === 0 && advertsLoaded && (
           <Modal
             title={"No adverts found"}
-            showModal={showModal}
+            showModal={!!error}
             onClose={handleCloseModal}
             buttons={[
               {
