@@ -31,6 +31,7 @@ export const getTags = async (): Promise<string[]> => {
   if (!response.ok) throw new Error(response.statusText);
 
   const data: string[] = await response.json();
+
   return data;
 };
 
@@ -51,12 +52,11 @@ export const createAdvert = async (
   }
 
   const data: Advert = await response.json();
+
   return data;
 };
 
-export const deleteAdvertById = async (
-  advertId: string
-): Promise<Advert | ErrorAdvert> => {
+export const deleteAdvertById = async (advertId: string): Promise<Advert> => {
   const response = await fetch(
     `http://localhost:3001/api/v1/adverts/${advertId}`,
     {
@@ -67,11 +67,9 @@ export const deleteAdvertById = async (
     }
   );
 
-  if (!response.ok) {
-    const errorData: ErrorAdvert = await response.json();
-    throw errorData;
-  }
+  if (!response.ok) throw new Error(response.statusText);
 
   const data: Advert = await response.json();
+
   return data;
 };
