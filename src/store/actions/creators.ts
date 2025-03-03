@@ -1,3 +1,4 @@
+import { NavigateFunction } from "react-router-dom";
 import { Credentials, login } from "../../components/auth/service";
 import {
   getTags,
@@ -141,16 +142,21 @@ export const AdvertCreated = (advert: Advert): Action => ({
   payload: advert,
 });
 
-export const AdvertDeleted = (id: string): AppThunk<Promise<void>> =>
+export const AdvertDeleted = (
+  id: string,
+  navigate: NavigateFunction
+): AppThunk<Promise<void>> =>
   async function (dispatch) {
     dispatch(AdvertDeletedPending());
     try {
       const advertDeleted = await deleteAdvertById(id);
       dispatch(AdvertDeletedFulfilled(advertDeleted));
+      navigate("/");
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "Ooops! Something went wrong";
       dispatch(AdvertDeletedRejected(errorMessage));
+      navigate("/404");
     }
   };
 
