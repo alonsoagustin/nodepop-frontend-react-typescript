@@ -78,7 +78,21 @@ type AdvertCreated = {
 
 type AdvertDeleted = {
   type: "ADVERT_DELETED";
-  payload: number;
+  payload: string;
+};
+
+type AdvertDeletedPending = {
+  type: "ADVERT_DELETED_PENDING";
+};
+
+type AdvertDeletedFulfilled = {
+  type: "ADVERT_DELETED_FULFILLED";
+  payload: Advert;
+};
+
+type AdvertDeletedRejected = {
+  type: "ADVERT_DELETED_REJECTED";
+  payload: string;
 };
 
 type Action =
@@ -99,6 +113,9 @@ type Action =
   | TagsLoadedFullfilled
   | TagsLoadedRejected
   | AdvertCreated
-  | AdvertDeleted;
+  | AdvertDeleted
+  | AdvertDeletedPending
+  | AdvertDeletedFulfilled
+  | AdvertDeletedRejected;
 
 export default Action;
