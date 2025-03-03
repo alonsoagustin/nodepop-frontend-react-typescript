@@ -12,6 +12,9 @@ const ui = (state = defaultState.ui, action: Action) => {
     case "TAGS_LOADED_PENDING": {
       return { ...state, error: null, loading: true };
     }
+    case "ADVERT_DELETED_PENDING": {
+      return { ...state, error: null, loading: true };
+    }
     case "AUTH_LOGIN_FULFILLED": {
       return { ...state, error: null, loading: false };
     }
@@ -21,6 +24,9 @@ const ui = (state = defaultState.ui, action: Action) => {
     case "TAGS_LOADED_FULFILLED": {
       return { ...state, error: null, loading: false };
     }
+    case "ADVERT_DELETED_FULFILLED": {
+      return { ...state, error: null, loading: false };
+    }
     case "AUTH_LOGIN_REJECTED": {
       return { ...state, error: action.payload, loading: false };
     }
@@ -28,6 +34,9 @@ const ui = (state = defaultState.ui, action: Action) => {
       return { ...state, error: action.payload, loading: false };
     }
     case "TAGS_LOADED_REJECTED": {
+      return { ...state, error: action.payload, loading: false };
+    }
+    case "ADVERT_DELETED_REJECTED": {
       return { ...state, error: action.payload, loading: false };
     }
     case "RESET_UI": {
