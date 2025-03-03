@@ -53,7 +53,7 @@ type TagsLoadedPending = {
 
 type TagsLoadedFullfilled = {
   type: "TAGS_LOADED_FULFILLED";
-  payload: string[];
+  payload: { data: string[]; loaded: boolean };
 };
 
 type TagsLoadedRejected = {
@@ -74,6 +74,20 @@ type FilterAdvertsByName = {
 type AdvertCreated = {
   type: "ADVERT_CREATED";
   payload: Advert;
+};
+
+type AdvertCreatedPending = {
+  type: "ADVERT_CREATED_PENDING";
+};
+
+type AdvertCreatedFulfilled = {
+  type: "ADVERT_CREATED_FULFILLED";
+  payload: Advert;
+};
+
+type AdvertCreatedRejected = {
+  type: "ADVERT_CREATED_REJECTED";
+  payload: string;
 };
 
 type AdvertDeleted = {
@@ -113,6 +127,9 @@ type Action =
   | TagsLoadedFullfilled
   | TagsLoadedRejected
   | AdvertCreated
+  | AdvertCreatedPending
+  | AdvertCreatedFulfilled
+  | AdvertCreatedRejected
   | AdvertDeleted
   | AdvertDeletedPending
   | AdvertDeletedFulfilled
