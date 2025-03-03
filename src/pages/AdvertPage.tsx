@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Navigate } from "react-router-dom";
 import Button from "../components/shared/Button";
 import Modal from "../components/shared/Modal";
 import Spinner from "../components/shared/Spinner";
@@ -15,7 +15,7 @@ const AdvertPage = () => {
   const advert = useAppSelector(getAdvert(advertId));
 
   // Get the loading state from store using selector
-  const { loading } = useAppSelector(getUi);
+  const { error, loading } = useAppSelector(getUi);
 
   // Hook to dispatch actions
   const dispatch = useAppDispatch();
@@ -27,8 +27,8 @@ const AdvertPage = () => {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    dispatch(AdvertLoaded(advertId));
-  }, [dispatch, advertId]);
+    if (!advert) dispatch(AdvertLoaded(advertId));
+  }, [dispatch, advert, advertId]);
 
   const handleConfirmDelete = async () => {
     setShowModal(false);
@@ -55,6 +55,8 @@ const AdvertPage = () => {
           },
         ]}
       />
+
+      {!loading && error && <Navigate to="/404" />}
 
       {loading && (
         <div className="position-fixed top-50 left-50 w-100">
