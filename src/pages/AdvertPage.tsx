@@ -5,7 +5,7 @@ import Modal from "../components/shared/Modal";
 import Spinner from "../components/shared/Spinner";
 import { getAdvert, getUi } from "../store/selectors/selectors";
 import { useAppDispatch, useAppSelector } from "../store/store";
-import { AdvertLoaded } from "../store/actions/creators";
+import { AdvertLoaded, AdvertDeleted } from "../store/actions/creators";
 
 const AdvertPage = () => {
   // Get the advert id from the URL
@@ -20,28 +20,19 @@ const AdvertPage = () => {
   // Hook to dispatch actions
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    dispatch(AdvertLoaded(advertId));
-  }, [dispatch, advertId]);
-
   // Hook to redirect to another page
   const navigate = useNavigate();
 
   // State to control the modal
   const [showModal, setShowModal] = useState(false);
 
-  // Function to open the modal
-  const handleOpenModal = () => {
-    setShowModal(true);
-  };
-
-  // Function to close the modal
-  const handleCloseModal = () => {
-    setShowModal(false);
-  };
+  useEffect(() => {
+    dispatch(AdvertLoaded(advertId));
+  }, [dispatch, advertId]);
 
   const handleConfirmDelete = async () => {
-    // TODO
+    setShowModal(false);
+    await dispatch(AdvertDeleted(advertId, navigate));
   };
 
   return (
@@ -50,12 +41,12 @@ const AdvertPage = () => {
       <Modal
         title="Are you sure you want to delete this advert?"
         showModal={showModal}
-        onClose={handleCloseModal}
+        onClose={() => setShowModal(false)}
         buttons={[
           {
             textContent: "Cancel",
             className: "btn-primary",
-            onClick: handleCloseModal,
+            onClick: () => setShowModal(false),
           },
           {
             textContent: "Delete",
@@ -70,8 +61,6 @@ const AdvertPage = () => {
           <Spinner isLoading={loading} />
         </div>
       )}
-
-      {!loading && !advert && navigate("/404")}
 
       {!loading && advert && (
         <>
@@ -96,7 +85,10 @@ const AdvertPage = () => {
                   <span className="btn btn-link">{advert.tags}</span>
                 </p>
                 <div>
-                  <Button className="btn-danger" onClick={handleOpenModal}>
+                  <Button
+                    className="btn-danger"
+                    onClick={() => setShowModal(true)}
+                  >
                     Delete
                   </Button>
                 </div>
