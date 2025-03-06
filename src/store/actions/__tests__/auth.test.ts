@@ -1,5 +1,6 @@
 import {
   AuthLogin,
+  AuthLogout,
   AuthLoginPending,
   AuthLoginRejected,
   AuthLoginFulfilled,
@@ -41,7 +42,8 @@ describe("AuthLogin", () => {
     );
   });
 
-  test("when login fails", async () => {
+  test("when login is rejected", async () => {
+    // Replace the global fetch function with a mock that returns a rejected promise
     vi.stubGlobal(
       "fetch",
       vi.fn().mockRejectedValue(new Error("Ooops! Something went wrong"))
@@ -55,6 +57,24 @@ describe("AuthLogin", () => {
       2,
       AuthLoginRejected("Ooops! Something went wrong")
     );
+  });
+});
+
+describe("AuthLogout", () => {
+  const dispatch = vi.fn();
+  const thunk = AuthLogout();
+  test("should remove accessToken from localStorage and dispatch AUTH_LOGOUT action", async () => {
+    // Replace the global localStorage.removeItem function with a mock
+    vi.stubGlobal("localStorage", { removeItem: vi.fn() });
+
+    // @ts-expect-error getState is not used
+    thunk(dispatch, undefined, undefined);
+
+    expect(dispatch).toHaveBeenCalledTimes(1);
+    expect(dispatch).toHaveBeenCalledWith({ type: "AUTH_LOGOUT" });
+    expect(localStorage.removeItem).toHaveBeenCalledWith("accessToken");
+
+    vi.restoreAllMocks();
   });
 });
 
