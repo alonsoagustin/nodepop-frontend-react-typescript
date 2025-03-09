@@ -1,0 +1,110 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`LoginPage > should render login form 1`] = `
+<div>
+  <h2
+    class="text-center mb-4"
+  >
+    ACCESS YOUR ACCOUNT
+  </h2>
+  <div
+    class="container"
+  >
+    <div
+      class="row d-flex justify-content-center"
+    >
+      <form
+        class="col-12 col-md-6 col-lg-4 p-4 border rounded"
+      >
+        <div
+          class="mb-3"
+        >
+          <label
+            class="form-label"
+            for="email"
+          >
+            <span>
+              Email adress
+            </span>
+             
+          </label>
+          <input
+            class="form-control"
+            id="email"
+            placeholder="Insert your email here"
+            required=""
+            type="email"
+            value=""
+          />
+        </div>
+        <div
+          class="mb-3"
+        >
+          <label
+            class="form-label"
+            for="password"
+          >
+            <span>
+              Password
+            </span>
+             
+          </label>
+          <input
+            class="form-control"
+            id="password"
+            placeholder="Insert your password here"
+            required=""
+            type="password"
+            value=""
+          />
+        </div>
+        <div
+          class="form-check mb-0"
+        >
+          <input
+            checked=""
+            class="form-check-input"
+            id="remember"
+            name="remember"
+            type="checkbox"
+            value="remember"
+          />
+          <label
+            class="form-label"
+            for="remember"
+          >
+            <span>
+              Remember me
+            </span>
+          </label>
+        </div>
+        <div
+          class="mb-3"
+        >
+          <a
+            data-discover="true"
+            href="/signup"
+          >
+            <span
+              class="btn btn-link"
+            >
+              I don't have an account yet
+            </span>
+          </a>
+        </div>
+        <div
+          class="d-flex justify-content-end "
+        >
+          <button
+            class="btn btn btn-primary"
+            disabled=""
+            type="submit"
+          >
+            Login
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+`;
