@@ -1,0 +1,22 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Spinner > should not render spinner > spinner-not-loading 1`] = `<div />`;
+
+exports[`Spinner > should render spinner > spinner-loading 1`] = `
+<div>
+  <div
+    class="d-flex justify-content-center"
+  >
+    <div
+      class="spinner-border text-primary"
+      role="status"
+    >
+      <span
+        class="visually-hidden"
+      >
+        Loading...
+      </span>
+    </div>
+  </div>
+</div>
+`;
