@@ -4,7 +4,7 @@ import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import { BrowserRouter } from "react-router-dom";
 // import { AuthProvider } from "./components/auth/AuthProvider";
-import { AdvertsProvider } from "./pages/AdvertsProvider";
+// import { AdvertsProvider } from "./pages/AdvertsProvider";
 import { Provider } from "react-redux";
 import configureStore from "./store/store";
 
@@ -23,11 +23,11 @@ createRoot(root).render(
   <StrictMode>
     <BrowserRouter>
       {/* <AuthProvider defaultIsLogged={!!accessToken}> */}
-      <AdvertsProvider>
-        <Provider store={store}>
-          <App />
-        </Provider>
-      </AdvertsProvider>
+      {/* <AdvertsProvider> */}
+      <Provider store={store}>
+        <App />
+      </Provider>
+      {/* </AdvertsProvider> */}
       {/* </AuthProvider> */}
     </BrowserRouter>
   </StrictMode>
