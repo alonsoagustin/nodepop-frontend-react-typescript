@@ -49,7 +49,7 @@ const AdvertPage = () => {
             onClick: () => setShowModal(false),
           },
           {
-            textContent: "Delete",
+            textContent: "Confirm",
             className: "btn-danger",
             onClick: handleConfirmDelete,
           },
