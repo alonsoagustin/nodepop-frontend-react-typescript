@@ -41,8 +41,10 @@ const renderComponent = () =>
       <Provider
         store={{
           getState: () => state,
-          subscribe: () => {},
-          dispatch: () => {},
+          subscribe: vi.fn(),
+          dispatch: vi.fn(),
+          replaceReducer: vi.fn(),
+          [Symbol.observable]: vi.fn(),
         }}
       >
         <AdvertPage />
